@@ -23645,6 +23645,59 @@ async function refreshQr() {
 }
 function startQrPoll() { if (qrPollTimer) clearInterval(qrPollTimer); qrPollTimer = setInterval(checkQr, 2000); }
 function stopQrPoll() { if (qrPollTimer) { clearInterval(qrPollTimer); qrPollTimer = null; } }
+var baseUpdateLoginProviderUi = updateLoginProviderUi;
+updateLoginProviderUi = function() {
+  baseUpdateLoginProviderUi();
+  if (loginProvider !== 'kugou') return;
+  var desc = document.getElementById('login-desc');
+  var st = document.getElementById('qr-status');
+  var refreshBtn = document.getElementById('refresh-qr-btn');
+  var qqCard = document.getElementById('qq-web-login-card');
+  if (desc) desc.innerHTML = 'Use <b>Kugou Music App</b> to scan this QR code. After confirmation, your Kugou playlists will be synced into Mineradio.';
+  if (st && !qrKey) {
+    st.textContent = kugouLoginStatus.loggedIn ? ('Kugou logged in · ' + (kugouLoginStatus.nickname || kugouLoginStatus.userId || '')) : 'Click refresh to get a Kugou QR code';
+    st.className = 'preview';
+  }
+  if (refreshBtn) {
+    refreshBtn.disabled = false;
+    refreshBtn.textContent = 'Kugou QR Login';
+    refreshBtn.onclick = refreshQr;
+  }
+  if (qqCard) {
+    qqCard.disabled = false;
+    var cardMark = qqCard.querySelector('b');
+    var cardLabel = qqCard.querySelector('span');
+    if (cardMark) cardMark.textContent = 'KG';
+    if (cardLabel) cardLabel.textContent = 'Scan QR and sync playlists';
+    qqCard.onclick = refreshQr;
+  }
+};
+var baseRefreshQr = refreshQr;
+refreshQr = async function() {
+  if (loginProvider !== 'kugou') return baseRefreshQr();
+  stopQrPoll();
+  qrKey = null;
+  updateLoginProviderUi();
+  var kgStatus = document.getElementById('qr-status');
+  var kgImg = document.getElementById('qr-img');
+  if (kgImg) kgImg.src = '';
+  try {
+    var kgQr = await apiJson('/api/kugou/login/qr/key?t=' + Date.now());
+    if (!kgQr || !kgQr.key || !kgQr.img) throw new Error((kgQr && kgQr.error) || 'Kugou QR failed');
+    qrKey = kgQr.key;
+    if (kgImg) kgImg.src = kgQr.img;
+    if (kgStatus) {
+      kgStatus.textContent = 'Use Kugou Music App to scan, then confirm login';
+      kgStatus.className = '';
+    }
+    startQrPoll();
+  } catch (e) {
+    if (kgStatus) {
+      kgStatus.textContent = 'Kugou QR error: ' + (e && e.message ? e.message : 'unknown');
+      kgStatus.className = 'fail';
+    }
+  }
+};
 function toggleQQCookiePanel() {
   qqManualCookieOpen = !qqManualCookieOpen;
   updateLoginProviderUi();
@@ -23875,6 +23928,40 @@ async function checkQr() {
     }
   } catch (e) { console.warn(e); }
 }
+var baseCheckQr = checkQr;
+checkQr = async function() {
+  if (loginProvider !== 'kugou') return baseCheckQr();
+  if (!qrKey) return;
+  var st = document.getElementById('qr-status');
+  try {
+    var r = await apiJson('/api/kugou/login/qr/check?key=' + encodeURIComponent(qrKey) + '&t=' + Date.now());
+    if (r.code === 800) {
+      if (st) { st.textContent = 'Kugou QR expired, refresh and try again'; st.className = 'fail'; }
+      stopQrPoll();
+    } else if (r.code === 801) {
+      if (st) { st.textContent = 'Use Kugou Music App to scan'; st.className = ''; }
+    } else if (r.code === 802) {
+      if (st) { st.textContent = 'Scanned. Confirm login on your phone'; st.className = 'scan'; }
+    } else if (r.code === 803 && r.loggedIn) {
+      stopQrPoll();
+      kugouLoginStatus = normalizeKugouLoginStatus(r);
+      activeAccountProvider = 'kugou';
+      qqManualCookieOpen = false;
+      if (st) { st.textContent = 'Kugou login success, syncing playlists...'; st.className = 'scan'; }
+      renderUserBtn();
+      await refreshUserPlaylists(true);
+      setTimeout(function(){
+        closeLoginModal();
+        showToast('Kugou synced: ' + (kugouLoginStatus.nickname || kugouLoginStatus.userId || ''));
+      }, 420);
+    } else if (r.code === 803) {
+      if (st) { st.textContent = r.message || 'Kugou login confirmed but token missing'; st.className = 'fail'; }
+      stopQrPoll();
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+};
 function updateUserModalUi() {
   activeAccountProvider = firstLoggedProvider();
   var st = platformStatus(activeAccountProvider);

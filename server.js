@@ -52,6 +52,7 @@ const crypto = require('crypto');
 const tls = require('tls');
 const { once } = require('events');
 const { fileURLToPath } = require('url');
+const QRCode = require('qrcode');
 const { analyzePodcastDjStream, analyzePodcastDjIntro } = require('./dj-analyzer');
 
 const PORT = process.env.PORT || 3000;
@@ -1793,10 +1794,20 @@ const QQ_HEADERS = {
   'User-Agent': UA,
 };
 const KUGOU_GATEWAY_URL = 'https://gateway.kugou.com';
-const KUGOU_APPID = '1005';
-const KUGOU_CLIENTVER = '20489';
-const KUGOU_ANDROID_SIGN_KEY = 'OIlwieks28dk2k092lksi2UIkp';
-const KUGOU_ANDROID_UA = 'Android15-1070-20489-46-0-DiscoveryDRADProtocol-wifi';
+const KUGOU_LOGIN_BASE_URL = 'https://login-user.kugou.com';
+const KUGOU_USER_SERVICE_URL = 'https://userservice.kugou.com';
+const KUGOU_APPID = '3116';
+const KUGOU_CLIENTVER = '11440';
+const KUGOU_QR_APPID = '1001';
+const KUGOU_QR_SRC_APPID = '2919';
+const KUGOU_ANDROID_SIGN_KEY = 'LnT6xpN3khm36zse0QzvmgTZ3waWdRSA';
+const KUGOU_WEB_SIGN_KEY = 'NVPh5oo715z5DIWAeQlhMDsWXXQV4hwt';
+const KUGOU_RSA_PUBLIC_KEY = [
+  '-----BEGIN PUBLIC KEY-----',
+  'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDECi0Np2UR87scwrvTr72L6oO01rBbbBPriSDFPxr3Z5syug0O24QyQO8bg27+0+4kBzTBTBOZ/WWU0WryL1JSXRTXLgFVxtzIY41Pe7lPOgsfTCn5kZcvKhYKJesKnnJDNr5/abvTGf+rHG3YRwsCHcQ08/q6ifSioBszvb3QiwIDAQAB',
+  '-----END PUBLIC KEY-----',
+].join('\n');
+const KUGOU_ANDROID_UA = 'Android15-1070-11440-46-0-DiscoveryDRADProtocol-wifi';
 const KUGOU_DEFAULT_MID = crypto.createHash('md5').update((process.env.COMPUTERNAME || 'mineradio') + ':kugou').digest('hex');
 
 function requestText(targetUrl, opts, body) {
@@ -1820,6 +1831,36 @@ function requestText(targetUrl, opts, body) {
           return;
         }
         resolve(text);
+      });
+    });
+    req.setTimeout(10000, () => req.destroy(new Error('Request timeout')));
+    req.on('error', reject);
+    if (body) req.write(body);
+    req.end();
+  });
+}
+
+function requestBuffer(targetUrl, opts, body) {
+  opts = opts || {};
+  return new Promise((resolve, reject) => {
+    const u = new URL(targetUrl);
+    const lib = u.protocol === 'https:' ? https : http;
+    const req = lib.request(u, {
+      method: opts.method || 'GET',
+      headers: opts.headers || {},
+    }, response => {
+      const chunks = [];
+      response.on('data', chunk => chunks.push(chunk));
+      response.on('end', () => {
+        const buf = Buffer.concat(chunks);
+        if (response.statusCode >= 400) {
+          const err = new Error('HTTP ' + response.statusCode);
+          err.statusCode = response.statusCode;
+          err.body = buf.toString('utf8');
+          reject(err);
+          return;
+        }
+        resolve(buf);
       });
     });
     req.setTimeout(10000, () => req.destroy(new Error('Request timeout')));
@@ -2557,6 +2598,46 @@ function kugouAndroidSignature(params, dataString) {
   return kugouMd5(KUGOU_ANDROID_SIGN_KEY + body + (dataString || '') + KUGOU_ANDROID_SIGN_KEY);
 }
 
+function kugouWebSignature(params) {
+  const body = Object.keys(params || {})
+    .sort()
+    .map(k => k + '=' + (params[k] == null ? '' : params[k]))
+    .join('');
+  return kugouMd5(KUGOU_WEB_SIGN_KEY + body + KUGOU_WEB_SIGN_KEY);
+}
+
+function kugouRandomString(length, lower) {
+  const chars = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let out = '';
+  for (let i = 0; i < (length || 16); i++) out += chars[Math.floor(Math.random() * chars.length)];
+  return lower ? out.toLowerCase() : out;
+}
+
+function kugouCalculateMid(seed) {
+  const hex = crypto.createHash('md5').update(String(seed || '')).digest('hex');
+  try {
+    return BigInt('0x' + hex).toString(10);
+  } catch (_) {
+    return KUGOU_DEFAULT_MID;
+  }
+}
+
+function kugouInitDevice(obj) {
+  obj = Object.assign({}, obj || {});
+  const guid = obj.KUGOU_API_GUID || crypto.randomUUID();
+  obj.KUGOU_API_GUID = guid;
+  obj.KUGOU_API_MID = obj.KUGOU_API_MID || kugouCalculateMid(guid);
+  obj.KUGOU_API_MAC = obj.KUGOU_API_MAC || kugouRandomString(12);
+  obj.KUGOU_API_DEV = obj.KUGOU_API_DEV || kugouRandomString(16);
+  return obj;
+}
+
+function saveKugouAuth(obj) {
+  const auth = kugouInitDevice(obj || {});
+  saveKugouCookie(serializeCookieObject(auth));
+  return auth;
+}
+
 function kugouCookieMid(obj) {
   obj = obj || kugouCookieObject();
   return obj.KUGOU_API_MID || obj.mid || obj.kg_mid || obj.KG_MID || KUGOU_DEFAULT_MID;
@@ -2591,8 +2672,11 @@ async function kugouGatewayRequest(pathname, options) {
 
   const method = String(options.method || 'GET').toUpperCase();
   const hasBody = options.data !== undefined && options.data !== null;
-  const dataString = hasBody ? JSON.stringify(options.data) : '';
-  if (!options.notSignature && !params.signature) params.signature = kugouAndroidSignature(params, dataString);
+  const dataString = hasBody ? (typeof options.data === 'string' ? options.data : JSON.stringify(options.data)) : '';
+  const signType = options.encryptType === 'web' ? 'web' : 'android';
+  if (!options.notSignature && !params.signature) {
+    params.signature = signType === 'web' ? kugouWebSignature(params) : kugouAndroidSignature(params, dataString);
+  }
 
   const u = new URL(pathname, options.baseURL || KUGOU_GATEWAY_URL);
   Object.keys(params).forEach(k => {
@@ -2610,9 +2694,176 @@ async function kugouGatewayRequest(pathname, options) {
     clienttime,
   }, options.headers || {});
   if (cookie) headers.Cookie = cookie;
-  if (hasBody) headers['Content-Type'] = 'application/json';
+  if (hasBody && typeof options.data !== 'string') headers['Content-Type'] = 'application/json';
+  if (options.responseType === 'buffer') {
+    return requestBuffer(u.toString(), { method, headers }, hasBody ? dataString : null);
+  }
   const text = await requestText(u.toString(), { method, headers }, hasBody ? dataString : null);
   return parseJSONText(text);
+}
+
+function kugouSafeGet(obj, pathKeys, fallback) {
+  let cur = obj;
+  for (const key of pathKeys || []) {
+    if (!cur || typeof cur !== 'object' || !(key in cur)) return fallback;
+    cur = cur[key];
+  }
+  return cur == null ? fallback : cur;
+}
+
+async function handleKugouLoginQrKey() {
+  const device = saveKugouAuth(kugouCookieObject());
+  const qrcodeText = 'https://h5.kugou.com/apps/loginQRCode/html/index.html?appid=' + KUGOU_APPID + '&';
+  const data = await kugouGatewayRequest('/v2/qrcode', {
+    baseURL: KUGOU_LOGIN_BASE_URL,
+    encryptType: 'web',
+    params: {
+      appid: KUGOU_QR_APPID,
+      type: 1,
+      plat: 4,
+      qrcode_txt: qrcodeText,
+      srcappid: KUGOU_QR_SRC_APPID,
+    },
+    headers: {
+      'User-Agent': UA,
+      'x-router': 'login-user.kugou.com',
+    },
+  });
+  const key = kugouSafeGet(data, ['data', 'qrcode'], '') || data.qrcode || data.key || '';
+  if (!key) {
+    const err = new Error((data && (data.error_msg || data.message || data.msg)) || 'KUGOU_QR_KEY_FAILED');
+    err.body = data;
+    throw err;
+  }
+  const loginUrl = 'https://h5.kugou.com/apps/loginQRCode/html/index.html?qrcode=' + encodeURIComponent(key);
+  const img = await QRCode.toDataURL(loginUrl, { margin: 1, width: 220, errorCorrectionLevel: 'M' });
+  return {
+    provider: 'kugou',
+    key,
+    qrcode: key,
+    url: loginUrl,
+    img,
+    deviceId: device.KUGOU_API_GUID,
+  };
+}
+
+async function kugouRegisterDevice(auth) {
+  auth = kugouInitDevice(auth || kugouCookieObject());
+  const dataMap = {
+    availableRamSize: 4983533568,
+    availableRomSize: 48114719,
+    availableSDSize: 48114717,
+    basebandVer: '',
+    batteryLevel: 100,
+    batteryStatus: 3,
+    brand: 'Redmi',
+    buildSerial: 'unknown',
+    device: 'marble',
+    imei: auth.KUGOU_API_GUID,
+    imsi: '',
+    manufacturer: 'Xiaomi',
+    uuid: auth.KUGOU_API_GUID,
+    accelerometerValue: '',
+    gravity: false,
+    gravityValue: '',
+    gyroscope: false,
+    gyroscopeValue: '',
+    light: false,
+    lightValue: '',
+    magnetic: false,
+    magneticValue: '',
+    orientation: false,
+    orientationValue: '',
+    pressure: false,
+    pressureValue: '',
+    step_counter: false,
+    step_counterValue: '',
+    temperature: false,
+    temperatureValue: '',
+    accelerometer: false,
+  };
+  const aesKey = kugouRandomString(6, true);
+  const digest = kugouMd5(aesKey);
+  const key = Buffer.from(digest.slice(0, 16), 'utf8');
+  const iv = Buffer.from(digest.slice(16, 32), 'utf8');
+  const cipher = crypto.createCipheriv('aes-128-cbc', key, iv);
+  const encrypted = Buffer.concat([cipher.update(JSON.stringify(dataMap), 'utf8'), cipher.final()]).toString('base64');
+  const pRaw = JSON.stringify({ aes: aesKey, uid: auth.userid || 0, token: auth.token || '' });
+  const p = crypto.publicEncrypt({
+    key: KUGOU_RSA_PUBLIC_KEY,
+    padding: crypto.constants.RSA_PKCS1_PADDING,
+  }, Buffer.from(pRaw)).toString('hex');
+  const buf = await kugouGatewayRequest('/risk/v2/r_register_dev', {
+    baseURL: KUGOU_USER_SERVICE_URL,
+    method: 'POST',
+    encryptType: 'android',
+    responseType: 'buffer',
+    params: { part: 1, platid: 1, p },
+    data: encrypted,
+    headers: { 'x-router': 'userservice.kugou.com' },
+  });
+  let result = null;
+  const plain = buf.toString('utf8');
+  try {
+    result = plain.trim().startsWith('{') ? JSON.parse(plain) : null;
+  } catch (_) {
+    result = null;
+  }
+  if (!result) {
+    const decipher = crypto.createDecipheriv('aes-128-cbc', key, iv);
+    const decrypted = Buffer.concat([decipher.update(buf), decipher.final()]).toString('utf8');
+    result = JSON.parse(decrypted);
+  }
+  const dfid = kugouSafeGet(result, ['data', 'dfid'], '');
+  if (dfid) auth.dfid = dfid;
+  return result;
+}
+
+async function handleKugouLoginQrCheck(key) {
+  const qr = String(key || '').trim();
+  if (!qr) return { provider: 'kugou', code: 800, status: 0, message: 'Missing Kugou QR key' };
+  const data = await kugouGatewayRequest('/v2/get_userinfo_qrcode', {
+    baseURL: KUGOU_LOGIN_BASE_URL,
+    encryptType: 'web',
+    params: {
+      plat: 4,
+      appid: KUGOU_APPID,
+      srcappid: KUGOU_QR_SRC_APPID,
+      qrcode: qr,
+    },
+    headers: {
+      'User-Agent': UA,
+      'x-router': 'login-user.kugou.com',
+    },
+  });
+  const status = Number(kugouSafeGet(data, ['data', 'status'], data.status || 0)) || 0;
+  if (status !== 4) {
+    const code = status === 2 ? 802 : (status === 3 ? 800 : 801);
+    return { provider: 'kugou', loggedIn: false, code, status, rawStatus: status, message: data && (data.message || data.msg || data.error_msg) || '' };
+  }
+  const token = kugouSafeGet(data, ['data', 'token'], '') || data.token || '';
+  const userId = String(kugouSafeGet(data, ['data', 'userid'], '') || data.userid || '').replace(/\D/g, '');
+  const nickname = kugouSafeGet(data, ['data', 'nickname'], '') || kugouSafeGet(data, ['data', 'username'], '') || '';
+  if (!token || !userId) {
+    return { provider: 'kugou', loggedIn: false, code: 803, status, error: 'KUGOU_TOKEN_MISSING', message: 'Kugou login confirmed but token was not returned' };
+  }
+  const auth = saveKugouAuth(Object.assign({}, kugouCookieObject(), {
+    token,
+    userid: userId,
+    nickname,
+  }));
+  try {
+    await kugouRegisterDevice(auth);
+    saveKugouAuth(auth);
+  } catch (e) {
+    console.warn('[KugouRegisterDevice]', e.message);
+  }
+  return Object.assign({}, getKugouLoginInfo(), {
+    code: 803,
+    status,
+    saved: true,
+    rawStatus: status,
+  });
 }
 
 function asArrayDeep(value, keys) {
@@ -3795,6 +4046,29 @@ const server = http.createServer(async (req, res) => {
     } catch (err) {
       console.error('[KugouLoginStatus]', err);
       sendJSON(res, { provider: 'kugou', loggedIn: false, error: err.message }, 500);
+    }
+    return;
+  }
+
+  if (pn === '/api/kugou/login/qr/key') {
+    try {
+      const data = await handleKugouLoginQrKey();
+      sendJSON(res, data);
+    } catch (err) {
+      console.error('[KugouLoginQrKey]', err);
+      sendJSON(res, { provider: 'kugou', error: err.message, loggedIn: false }, 500);
+    }
+    return;
+  }
+
+  if (pn === '/api/kugou/login/qr/check') {
+    try {
+      const key = url.searchParams.get('key') || url.searchParams.get('qrcode') || '';
+      const data = await handleKugouLoginQrCheck(key);
+      sendJSON(res, data);
+    } catch (err) {
+      console.error('[KugouLoginQrCheck]', err);
+      sendJSON(res, { provider: 'kugou', error: err.message, loggedIn: false, code: 500 }, 500);
     }
     return;
   }
