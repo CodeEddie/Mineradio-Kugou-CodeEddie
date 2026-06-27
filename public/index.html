@@ -822,6 +822,16 @@ body.login-guide-active #login-guide-canvas{opacity:1}
 .qq-login-mark:disabled{opacity:.66;cursor:wait;transform:none}
 .qq-login-mark b{font-size:22px;letter-spacing:.08em}
 .qq-login-mark span{font-size:10.5px;color:rgba(255,255,255,.46);letter-spacing:.5px}
+.login-account-card{display:none;align-items:center;gap:13px;margin:0 auto 16px;padding:14px;border-radius:16px;border:1px solid rgba(255,255,255,.095);background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.025));text-align:left;box-shadow:inset 0 1px 0 rgba(255,255,255,.075)}
+.login-account-card.show{display:flex}
+.login-account-card img{width:54px;height:54px;border-radius:50%;object-fit:cover;background:rgba(255,255,255,.08);flex:0 0 auto}
+.login-account-copy{min-width:0;flex:1}
+.login-account-name{font-size:14px;font-weight:780;color:rgba(255,255,255,.94);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.login-account-meta{margin-top:4px;font-size:11px;line-height:1.45;color:rgba(255,255,255,.52)}
+.login-account-card.netease{border-color:rgba(217,91,103,.22);background:linear-gradient(135deg,rgba(217,91,103,.11),rgba(255,255,255,.025))}
+.login-account-card.qq{border-color:rgba(191,214,107,.22);background:linear-gradient(135deg,rgba(191,214,107,.10),rgba(255,255,255,.025))}
+.login-account-card.kugou{border-color:rgba(68,199,255,.24);background:linear-gradient(135deg,rgba(68,199,255,.11),rgba(255,255,255,.025))}
+.login-modal-logged-in .qr-shell,.login-modal-logged-in #qq-cookie-panel{display:none!important}
 .qq-cookie-panel{display:none;margin-top:12px;padding:12px;border-radius:14px;border:1px solid rgba(191,214,107,.18);background:rgba(255,255,255,.035)}
 .qq-cookie-panel.show{display:block}
 .qq-cookie-input{width:100%;height:74px;resize:none;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(0,0,0,.22);color:rgba(255,255,255,.82);padding:10px 11px;font-family:inherit;font-size:11px;line-height:1.45;outline:none}
@@ -1433,6 +1443,93 @@ html.control-glass-svg-ok .icon-btn,html.control-glass-svg-ok #fx-fab,html.contr
 #playlist-panel .qi-act button{background:rgba(255,255,255,.06)!important;border:0!important;box-shadow:none!important;color:rgba(255,255,255,.55)!important}
 #playlist-panel .qi-act button:hover{background:rgba(255,255,255,.15)!important;color:#fff!important}
 #playlist-panel .qi-act button.queue-next:hover{background:rgba(var(--fc-accent-rgb),.14)!important;color:#fff!important}
+
+/* Playlist panel polish: denser cloud playlists, calmer expanded detail. */
+#playlist-panel{width:364px!important;padding:20px!important;border-radius:22px!important;background:linear-gradient(155deg,rgba(22,18,22,.72),rgba(10,11,15,.82) 54%,rgba(10,10,12,.68))!important}
+#playlist-panel .queue-head{margin-bottom:16px}
+#playlist-panel .panel-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}
+#playlist-panel .panel-tab{height:34px;padding:0 10px;text-align:center;font-size:11.5px}
+#playlist-panel .queue-toolbar{margin:10px 0 12px}
+#playlist-panel .queue-chip{height:28px;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:rgba(255,255,255,.045)!important;color:rgba(255,255,255,.66)!important}
+#playlist-panel .pl-section-label{margin:16px 2px 9px;letter-spacing:.16em;color:rgba(var(--fc-accent-rgb),.68)!important}
+#playlist-panel .pl-card{min-height:62px;padding:10px 11px!important;border-radius:14px!important;margin-bottom:9px!important;background:linear-gradient(135deg,rgba(255,255,255,.045),rgba(255,255,255,.022))!important;border-color:rgba(255,255,255,.065)!important}
+#playlist-panel .pl-card:hover{transform:translateY(-1px);background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.035))!important;border-color:rgba(255,255,255,.12)!important}
+#playlist-panel .pl-card.expanded{background:linear-gradient(145deg,rgba(var(--fc-accent-rgb),.12),rgba(10,18,24,.72) 58%,rgba(255,255,255,.035))!important;border-color:rgba(var(--fc-accent-rgb),.34)!important}
+#playlist-panel .pl-card img{width:50px;height:50px;border-radius:11px}
+#playlist-panel .pl-name{font-size:13px;font-weight:760;letter-spacing:.01em}
+#playlist-panel .pl-sub{font-size:11px;color:rgba(255,255,255,.48)}
+#playlist-panel .tag-source{height:17px;padding:0 6px;border-radius:999px;font-size:9px;letter-spacing:.04em}
+#playlist-panel .pl-inline-detail{margin:-4px 0 16px;padding:10px;border-radius:17px;background:linear-gradient(180deg,rgba(255,255,255,.060),rgba(255,255,255,.020));border:1px solid rgba(255,255,255,.075);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+#playlist-panel .pl-detail-sticky{position:relative;top:auto;margin:0 0 10px;padding:0 0 11px;border-radius:0;background:transparent!important;border-bottom:1px solid rgba(255,255,255,.070)}
+#playlist-panel .pl-detail-head{gap:11px;margin:0 0 9px!important;padding-bottom:0!important;border-bottom:0!important}
+#playlist-panel .pl-detail-cover{width:44px;height:44px;border-radius:10px}
+#playlist-panel .pl-detail-title{font-size:15px;font-weight:840}
+#playlist-panel .pl-detail-sub{font-size:11px;color:rgba(255,255,255,.50)}
+#playlist-panel .pl-detail-count{font-size:11px;color:rgba(255,255,255,.52)}
+#playlist-panel .pl-detail-actions{margin:8px 0 0;gap:9px}
+#playlist-panel .pl-detail-play{height:34px;min-width:122px;border-radius:12px;background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(var(--fc-accent-rgb),.14))!important;border-color:rgba(255,255,255,.22)!important;font-size:12px}
+#playlist-panel .pl-detail-top-btn{height:34px;min-width:92px;border-radius:12px}
+#playlist-panel .pl-detail-list{gap:7px}
+#playlist-panel .pl-detail-row{min-height:52px;padding:8px 9px!important;border-radius:12px!important;background:rgba(0,0,0,.28)!important;border-color:rgba(255,255,255,.055)!important}
+#playlist-panel .pl-detail-row:hover{background:rgba(var(--fc-accent-rgb),.075)!important;border-color:rgba(var(--fc-accent-rgb),.20)!important}
+#playlist-panel .pl-detail-row img{width:38px;height:38px;border-radius:9px}
+#playlist-panel .pl-detail-row-title{font-size:12.5px;font-weight:780;color:rgba(255,255,255,.90)}
+#playlist-panel .pl-detail-row-artist{font-size:11px;color:rgba(255,255,255,.62)}
+#playlist-panel .pl-detail-progress{height:32px;color:rgba(255,255,255,.42)}
+
+/* Bottom controls: reduce chromatic glare and keep the bar visually calm. */
+#bottom-bar.visible{
+  opacity:.94!important;
+  background:linear-gradient(180deg,rgba(12,13,16,.46),rgba(5,6,8,.62))!important;
+  backdrop-filter:blur(16px) saturate(1.08) brightness(.94)!important;
+  -webkit-backdrop-filter:blur(16px) saturate(1.08) brightness(.94)!important;
+  box-shadow:0 16px 46px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.10),inset 0 -1px 0 rgba(255,255,255,.045)!important;
+}
+html.control-glass-svg-ok #bottom-bar.visible{
+  backdrop-filter:blur(16px) saturate(1.08) brightness(.94)!important;
+  -webkit-backdrop-filter:blur(16px) saturate(1.08) brightness(.94)!important;
+}
+#bottom-bar .ctrl-btn{
+  background:transparent!important;
+  box-shadow:none!important;
+  text-shadow:none!important;
+}
+#bottom-bar .ctrl-btn:hover{
+  background:rgba(255,255,255,.060)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08)!important;
+  text-shadow:none!important;
+}
+#bottom-bar #play-btn{
+  background:rgba(255,255,255,.070)!important;
+  backdrop-filter:blur(10px) saturate(1)!important;
+  -webkit-backdrop-filter:blur(10px) saturate(1)!important;
+  box-shadow:0 10px 24px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.16)!important;
+}
+#bottom-bar #play-btn:hover{
+  background:rgba(255,255,255,.12)!important;
+  box-shadow:0 12px 28px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.18)!important;
+}
+#bottom-bar #progress-bar{
+  height:3px;
+  background:rgba(255,255,255,.085)!important;
+  box-shadow:none!important;
+}
+#bottom-bar #progress-bar:hover,#bottom-bar #progress-bar.is-dragging{
+  height:4px;
+  background:rgba(255,255,255,.13)!important;
+  box-shadow:none!important;
+}
+#bottom-bar #progress-fill{
+  background:linear-gradient(90deg,rgba(255,255,255,.72),rgba(var(--fc-accent-rgb),.46))!important;
+  box-shadow:none!important;
+}
+#bottom-bar #progress-thumb{
+  background:rgba(255,255,255,.82)!important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.20),0 4px 12px rgba(0,0,0,.22)!important;
+}
+#bottom-bar .control-cover{
+  box-shadow:0 8px 20px rgba(0,0,0,.26),inset 0 0 0 1px rgba(255,255,255,.075)!important;
+}
 
 .home-card[data-home-tone],.home-tile[data-home-tone]{--tone-a:var(--home-accent);--tone-b:color-mix(in srgb,var(--home-accent) 58%,#2442ff);--tone-c:color-mix(in srgb,var(--home-accent) 42%,#f8f4ee)}
 .home-hero{border-color:color-mix(in srgb,var(--home-accent) 34%,rgba(255,255,255,.085));background:linear-gradient(145deg,color-mix(in srgb,var(--home-accent) 18%,rgba(33,29,34,.64)),rgba(9,10,14,.76) 48%,color-mix(in srgb,var(--home-accent) 10%,rgba(17,20,25,.70)))}
@@ -2298,7 +2395,7 @@ html.control-glass-svg-ok #visual-guide-btn:hover{
   </div>
   <div id="pl-pane" style="display:none">
     <div class="queue-toolbar">
-      <div class="queue-chip">登录后显示网易云 / QQ 歌单</div>
+      <div class="queue-chip">登录后显示网易云 / QQ / 酷狗歌单</div>
       <button class="fx-mini-btn ghost" onclick="refreshUserPlaylists(true)" style="height:26px;padding:0 10px;font-size:11px">刷新</button>
     </div>
     <div id="pl-list" style="margin-top:6px"></div>
@@ -2488,6 +2585,13 @@ html.control-glass-svg-ok #visual-guide-btn:hover{
     </div>
     <h2 id="login-modal-title">扫码登录网易云音乐</h2>
     <div id="login-modal-desc" class="desc">使用 <b>网易云音乐 App</b> 扫码，可同步歌单、红心与播客。</div>
+    <div id="login-account-card" class="login-account-card">
+      <img id="login-account-avatar" src="" alt="">
+      <div class="login-account-copy">
+        <div id="login-account-name" class="login-account-name"></div>
+        <div id="login-account-meta" class="login-account-meta"></div>
+      </div>
+    </div>
     <div id="qr-shell" class="qr-shell">
       <img id="qr-img" src="" alt="">
       <button id="qq-web-login-card" class="qq-login-mark" type="button" onclick="openProviderWebLogin()"><b>QQ</b><span>打开官方扫码窗口</span></button>
@@ -23661,9 +23765,41 @@ function setLoginProvider(provider, silent) {
   updateLoginProviderUi();
   if (!silent && document.getElementById('login-modal').classList.contains('show')) refreshQr();
 }
+function loginProviderBusy(provider) {
+  if (provider === 'qq') return !!qqWebLoginBusy;
+  if (provider === 'kugou') return !!kugouWebLoginBusy;
+  return !!neteaseWebLoginBusy;
+}
+function loginProviderVipText(provider, st) {
+  if (!st || !st.loggedIn) return '';
+  if (provider === 'kugou') return hasProviderVip('kugou', st) ? (st.vipLabel || 'Kugou VIP') : '酷狗普通会话';
+  if (provider === 'qq') return hasProviderVip('qq', st) ? 'QQ VIP 会员' : 'QQ 音乐会话';
+  var level = providerVipLevel('netease', st);
+  return level === 'svip' ? '网易云 SVIP' : (level === 'vip' ? '网易云 VIP' : '网易云普通用户');
+}
+function renderLoginAccountCard(provider) {
+  var st = platformStatus(provider);
+  var card = document.getElementById('login-account-card');
+  var avatar = document.getElementById('login-account-avatar');
+  var name = document.getElementById('login-account-name');
+  var metaEl = document.getElementById('login-account-meta');
+  if (!card) return !!(st && st.loggedIn);
+  var loggedIn = !!(st && st.loggedIn);
+  card.className = 'login-account-card' + (loggedIn ? ' show ' + provider : '');
+  if (loggedIn) {
+    var meta = platformMeta(provider);
+    if (avatar) avatar.src = providerAvatarSrc(provider, st);
+    if (name) name.textContent = st.nickname || meta.label;
+    if (metaEl) metaEl.textContent = 'UID: ' + (st.userId || '-') + ' · ' + loginProviderVipText(provider, st);
+  }
+  return loggedIn;
+}
 function updateLoginProviderUi() {
   var meta = platformMeta(loginProvider);
   var isQQ = loginProvider === 'qq';
+  var isKugou = loginProvider === 'kugou';
+  var isLoggedIn = renderLoginAccountCard(loginProvider);
+  var modal = document.querySelector('#login-modal .dual-login-modal');
   var title = document.getElementById('login-modal-title');
   var desc = document.getElementById('login-modal-desc');
   var shell = document.getElementById('qr-shell');
@@ -23677,190 +23813,189 @@ function updateLoginProviderUi() {
   var neteaseBtn = document.getElementById('login-provider-netease');
   var qqBtn = document.getElementById('login-provider-qq');
   var kugouBtn = document.getElementById('login-provider-kugou');
-  var canOpenNeteaseWeb = !!(window.desktopWindow && typeof window.desktopWindow.openNeteaseMusicLogin === 'function');
-  var isKugou = loginProvider === 'kugou';
+  if (modal) modal.classList.toggle('login-modal-logged-in', isLoggedIn);
   if (neteaseBtn) neteaseBtn.classList.toggle('active', loginProvider === 'netease');
   if (qqBtn) qqBtn.classList.toggle('active', isQQ);
   if (kugouBtn) kugouBtn.classList.toggle('active', isKugou);
-  if (title) title.textContent = '扫码登录' + meta.label;
-  if (desc) desc.innerHTML = isKugou
-    ? '打开 <b>酷狗音乐官方网页窗口</b> 登录，成功后会保存网页登录会话，方便后续接入酷狗接口。'
-    : isQQ
-    ? '打开 <b>QQ 音乐官方网页登录窗口</b> 扫码，成功后会自动同步账号会话。'
-    : (canOpenNeteaseWeb
-      ? '打开 <b>网易云音乐官方网页登录窗口</b> 扫码，避开接口二维码风控；成功后会自动同步账号会话。'
-      : '使用 <b>网易云音乐 App</b> 扫码，可同步歌单、红心与播客。');
-  if (shell) {
-    shell.classList.toggle('web-login-preview', isQQ || isKugou || canOpenNeteaseWeb);
-    shell.classList.toggle('qq-preview', isQQ);
-    shell.classList.toggle('netease-preview', !isQQ && !isKugou && canOpenNeteaseWeb);
+  if (title) title.textContent = isLoggedIn ? (meta.label + '已登录') : ('扫码登录' + meta.label);
+  if (desc) {
+    desc.innerHTML = isLoggedIn
+      ? '当前已保存 <b>' + meta.label + '</b> 登录会话，可继续同步歌单和会员信息；需要换号时请先退出登录。'
+      : (isKugou
+        ? '使用 <b>酷狗音乐 App</b> 扫码登录，成功后会同步账号信息和酷狗歌单。'
+        : isQQ
+        ? '打开 <b>QQ 音乐官方扫码窗口</b> 登录，成功后会自动同步账号会话和歌单。'
+        : '使用 <b>网易云音乐 App</b> 扫码，可同步歌单、红心与播客。');
   }
-  if (qqPanel) qqPanel.classList.toggle('show', (isQQ || isKugou) && qqManualCookieOpen);
+  if (shell) {
+    shell.classList.toggle('web-login-preview', isQQ && !isLoggedIn);
+    shell.classList.toggle('qq-preview', isQQ && !isLoggedIn);
+    shell.classList.remove('netease-preview');
+  }
+  if (qqPanel) qqPanel.classList.toggle('show', !isLoggedIn && (isQQ || isKugou) && qqManualCookieOpen);
   if (qqCookieToggle) {
-    qqCookieToggle.classList.toggle('show', isQQ || isKugou);
+    qqCookieToggle.classList.toggle('show', !isLoggedIn && (isQQ || isKugou));
     qqCookieToggle.textContent = qqManualCookieOpen ? '收起导入' : '手动导入';
   }
   if (qqCookieInput) qqCookieInput.placeholder = isKugou ? 'KuGoo=...; kg_mid=...; userid=...; token=...' : 'uin=...; qqmusic_key=...; qm_keyst=...';
   if (qqCookieNote) qqCookieNote.textContent = isKugou ? '从 kugou.com 的登录会话导入。' : '从 y.qq.com 的登录会话导入。';
   if (qqCard) {
-    qqCard.disabled = isKugou ? !!kugouWebLoginBusy : (isQQ ? !!qqWebLoginBusy : !!neteaseWebLoginBusy);
+    qqCard.style.display = (!isLoggedIn && isQQ) ? '' : 'none';
+    qqCard.disabled = loginProviderBusy(loginProvider);
     var cardMark = qqCard.querySelector('b');
     var cardLabel = qqCard.querySelector('span');
-    if (cardMark) cardMark.textContent = isKugou ? 'KG' : (isQQ ? 'QQ' : 'NE');
-    if (cardLabel) cardLabel.textContent = isKugou
-      ? (kugouWebLoginBusy ? '等待网页登录确认' : '打开酷狗官方窗口')
-      : isQQ
-      ? (qqWebLoginBusy ? '等待扫码确认' : '打开官方扫码窗口')
-      : (neteaseWebLoginBusy ? '等待扫码确认' : '打开官方登录窗口');
+    if (cardMark) cardMark.textContent = 'QQ';
+    if (cardLabel) cardLabel.textContent = qqWebLoginBusy ? '等待扫码确认' : '打开官方扫码窗口';
+    qqCard.onclick = openQQWebLogin;
   }
   if (st) {
-    st.className = (isQQ || isKugou) ? 'preview' : '';
-    st.textContent = isKugou
-      ? (kugouLoginStatus.loggedIn ? ('已保存酷狗音乐会话 · ' + (kugouLoginStatus.nickname || '')) : '点击“网页登录”打开酷狗音乐官方窗口')
-      : isQQ
-      ? (qqLoginStatus.loggedIn ? ('已保存 QQ 音乐会话 · ' + (qqLoginStatus.nickname || '')) : '点击“扫码登录”打开 QQ 音乐官方窗口')
-      : (canOpenNeteaseWeb ? '点击“网页登录”打开网易云官方窗口' : '正在生成二维码…');
+    st.style.display = isLoggedIn ? 'none' : '';
+    st.className = isQQ ? 'preview' : '';
+    st.textContent = isQQ ? '点击二维码区域或下方按钮打开 QQ 音乐官方扫码窗口' : '正在生成二维码…';
   }
   if (refreshBtn) {
-    refreshBtn.disabled = isKugou ? !!kugouWebLoginBusy : (isQQ ? !!qqWebLoginBusy : !!neteaseWebLoginBusy);
-    refreshBtn.textContent = isKugou ? (kugouWebLoginBusy ? '等待登录…' : '网页登录') : (isQQ ? (qqWebLoginBusy ? '等待扫码…' : '扫码登录') : (canOpenNeteaseWeb ? (neteaseWebLoginBusy ? '等待扫码…' : '网页登录') : '刷新二维码'));
-    refreshBtn.onclick = isKugou ? openKugouWebLogin : (isQQ ? openQQWebLogin : (canOpenNeteaseWeb ? openNeteaseWebLogin : refreshQr));
+    refreshBtn.disabled = loginProviderBusy(loginProvider);
+    refreshBtn.textContent = isLoggedIn
+      ? ('退出' + meta.label)
+      : (isQQ ? (qqWebLoginBusy ? '等待扫码…' : '扫码登录') : (loginProviderBusy(loginProvider) ? '等待登录…' : '刷新二维码'));
+    refreshBtn.onclick = isLoggedIn ? function(){ logoutLoginProvider(loginProvider); } : (isQQ ? openQQWebLogin : refreshQr);
   }
 }
 async function refreshQr() {
   stopQrPoll();
-  updateLoginProviderUi();
+  qrKey = null;
   if (loginProvider === 'qq') {
-    qrKey = null;
-    var qqStatus = document.getElementById('qr-status');
-    var qqImg = document.getElementById('qr-img');
-    if (qqImg) qqImg.src = '';
     var info = await refreshQQLoginStatus();
-    if (qqStatus) {
-      qqStatus.textContent = info && info.loggedIn ? ('已保存 QQ 音乐会话 · ' + (info.nickname || '')) : '点击“扫码登录”打开 QQ 音乐官方窗口';
-      qqStatus.className = 'preview';
+    updateLoginProviderUi();
+    if (!(info && info.loggedIn)) {
+      var qqImg = document.getElementById('qr-img');
+      if (qqImg) qqImg.src = '';
     }
     return;
   }
   if (loginProvider === 'kugou') {
-    qrKey = null;
-    var kgStatus = document.getElementById('qr-status');
-    var kgImg = document.getElementById('qr-img');
-    if (kgImg) kgImg.src = '';
     var kgInfo = await refreshKugouLoginStatus();
-    if (kgStatus) {
-      kgStatus.textContent = kgInfo && kgInfo.loggedIn ? ('已保存酷狗音乐会话 · ' + (kgInfo.nickname || '')) : '点击“网页登录”打开酷狗音乐官方窗口';
-      kgStatus.className = 'preview';
+    updateLoginProviderUi();
+    if (kgInfo && kgInfo.loggedIn) return;
+    var kgImg = document.getElementById('qr-img');
+    var kgStatus = document.getElementById('qr-status');
+    if (kgImg) {
+      kgImg.style.display = '';
+      kgImg.src = '';
+    }
+    try {
+      if (kgStatus) {
+        kgStatus.style.display = '';
+        kgStatus.textContent = '正在生成酷狗登录二维码...';
+        kgStatus.className = 'preview';
+      }
+      var kgKey = await apiJson('/api/kugou/login/qr/key?t=' + Date.now());
+      if (!kgKey || !kgKey.key || !kgKey.img) throw new Error((kgKey && (kgKey.message || kgKey.error)) || '酷狗二维码生成失败');
+      qrKey = kgKey.key;
+      if (kgImg) kgImg.src = kgKey.img;
+      if (kgStatus) {
+        kgStatus.textContent = '请使用酷狗音乐 App 扫码登录';
+        kgStatus.className = '';
+      }
+      startQrPoll();
+    } catch (e) {
+      if (kgStatus) {
+        kgStatus.textContent = '酷狗二维码生成失败: ' + (e && e.message ? e.message : e);
+        kgStatus.className = 'fail';
+      }
     }
     return;
   }
-  if (window.desktopWindow && typeof window.desktopWindow.openNeteaseMusicLogin === 'function') {
-    qrKey = null;
+  var neInfo = await refreshLoginStatus(true);
+  updateLoginProviderUi();
+  if (neInfo && neInfo.loggedIn) return;
+  try {
+    var neKey = await apiJson('/api/login/qr/key?t=' + Date.now());
+    if (!neKey.key) throw new Error('获取 key 失败');
+    qrKey = neKey.key;
+    var q = await apiJson('/api/login/qr/create?key=' + encodeURIComponent(qrKey) + '&t=' + Date.now());
+    if (!q.img) throw new Error('生成二维码失败');
     var neImg = document.getElementById('qr-img');
     var neStatus = document.getElementById('qr-status');
-    if (neImg) neImg.src = '';
-    if (neStatus) {
-      neStatus.textContent = loginStatus.loggedIn ? ('已保存网易云会话 · ' + (loginStatus.nickname || '')) : '点击“网页登录”打开网易云官方窗口';
-      neStatus.className = 'preview';
+    if (neImg) {
+      neImg.style.display = '';
+      neImg.src = q.img;
     }
-    return;
-  }
-  try {
-    var k = await apiJson('/api/login/qr/key');
-    if (!k.key) throw new Error('获取 key 失败');
-    qrKey = k.key;
-    var q = await apiJson('/api/login/qr/create?key=' + encodeURIComponent(qrKey));
-    if (!q.img) throw new Error('生成二维码失败');
-    document.getElementById('qr-img').src = q.img;
-    document.getElementById('qr-status').textContent = '请使用网易云音乐 App 扫码';
+    if (neStatus) {
+      neStatus.style.display = '';
+      neStatus.textContent = '请使用网易云音乐 App 扫码';
+      neStatus.className = '';
+    }
     startQrPoll();
   } catch (e) {
-    document.getElementById('qr-status').textContent = '出错: ' + e.message;
-    document.getElementById('qr-status').className = 'fail';
+    var errStatus = document.getElementById('qr-status');
+    if (errStatus) {
+      errStatus.style.display = '';
+      errStatus.textContent = '出错: ' + e.message;
+      errStatus.className = 'fail';
+    }
   }
 }
 function startQrPoll() { if (qrPollTimer) clearInterval(qrPollTimer); qrPollTimer = setInterval(checkQr, 2000); }
 function stopQrPoll() { if (qrPollTimer) { clearInterval(qrPollTimer); qrPollTimer = null; } }
-var baseUpdateLoginProviderUi = updateLoginProviderUi;
-updateLoginProviderUi = function() {
-  baseUpdateLoginProviderUi();
-  var shell = document.getElementById('qr-shell');
-  var img = document.getElementById('qr-img');
-  var qqCard = document.getElementById('qq-web-login-card');
-  if (loginProvider !== 'kugou') {
-    if (qqCard) qqCard.style.display = '';
-    if (img) img.style.display = '';
-    return;
-  }
-  var desc = document.getElementById('login-modal-desc');
-  var st = document.getElementById('qr-status');
-  var refreshBtn = document.getElementById('refresh-qr-btn');
-  if (shell) {
-    shell.classList.remove('web-login-preview');
-    shell.classList.remove('netease-preview', 'qq-preview');
-  }
-  if (img) img.style.display = '';
-  if (qqCard) qqCard.style.display = 'none';
-  if (desc) desc.innerHTML = '使用 <b>酷狗音乐 App</b> 扫码登录，成功后 Mineradio 会同步账号信息和酷狗歌单。';
-  if (st && !qrKey) {
-    st.textContent = kugouLoginStatus.loggedIn ? ('酷狗音乐已登录 · ' + (kugouLoginStatus.nickname || kugouLoginStatus.userId || '')) : '正在生成酷狗登录二维码...';
-    st.className = 'preview';
-  }
-  if (refreshBtn) {
-    refreshBtn.disabled = !!kugouWebLoginBusy;
-    refreshBtn.textContent = kugouWebLoginBusy ? '等待登录...' : '刷新二维码';
-    refreshBtn.onclick = refreshQr;
-  }
-  if (qqCard) {
-    qqCard.disabled = !!kugouWebLoginBusy;
-    var cardMark = qqCard.querySelector('b');
-    var cardLabel = qqCard.querySelector('span');
-    if (cardMark) cardMark.textContent = 'KG';
-    if (cardLabel) cardLabel.textContent = kugouWebLoginBusy ? 'Waiting for login' : 'Open official web login';
-    qqCard.onclick = openKugouWebLogin;
-  }
-};
-var baseRefreshQr = refreshQr;
-refreshQr = async function() {
-  if (loginProvider !== 'kugou') return baseRefreshQr();
+async function logoutLoginProvider(provider) {
+  provider = provider === 'qq' || provider === 'kugou' ? provider : 'netease';
   stopQrPoll();
-  updateLoginProviderUi();
-  qrKey = null;
-  var kgImg = document.getElementById('qr-img');
-  var kgStatus = document.getElementById('qr-status');
-  if (kgImg) {
-    kgImg.style.display = '';
-    kgImg.src = '';
+  var statusEl = document.getElementById('qr-status');
+  if (statusEl) {
+    statusEl.style.display = '';
+    statusEl.textContent = '正在退出' + platformMeta(provider).label + '...';
+    statusEl.className = 'preview';
   }
   try {
-    var kgInfo = await refreshKugouLoginStatus();
-    if (kgInfo && kgInfo.loggedIn) {
-      if (kgStatus) {
-        kgStatus.textContent = '酷狗音乐已登录 · ' + (kgInfo.nickname || kgInfo.userId || '');
-        kgStatus.className = 'scan';
-      }
-      return;
+    if (provider === 'kugou') {
+      try { await apiJson('/api/kugou/logout'); } catch (e) {}
+      try {
+        if (window.desktopWindow && typeof window.desktopWindow.clearKugouMusicLogin === 'function') {
+          await window.desktopWindow.clearKugouMusicLogin();
+        }
+      } catch (e) {}
+      kugouLoginStatus = normalizeKugouLoginStatus(null);
+      kugouPlaylists = [];
+      userPlaylists = userPlaylists.filter(function(pl){ return pl.provider !== 'kugou'; });
+    } else if (provider === 'qq') {
+      try { await apiJson('/api/qq/logout'); } catch (e) {}
+      try {
+        if (window.desktopWindow && typeof window.desktopWindow.clearQQMusicLogin === 'function') {
+          await window.desktopWindow.clearQQMusicLogin();
+        }
+      } catch (e) {}
+      qqLoginStatus = normalizeQQLoginStatus(null);
+      qqPlaylists = [];
+      userPlaylists = userPlaylists.filter(function(pl){ return pl.provider !== 'qq'; });
+    } else {
+      await apiJson('/api/logout');
+      try {
+        if (window.desktopWindow && typeof window.desktopWindow.clearNeteaseMusicLogin === 'function') {
+          await window.desktopWindow.clearNeteaseMusicLogin();
+        }
+      } catch (e) {}
+      loginStatus = { loggedIn: false };
+      myPodcastCollections = [];
+      myPodcastItems = {};
+      likedSongMap = {};
+      userPlaylists = qqPlaylists.concat(kugouPlaylists);
+      updateLikeButtons();
     }
-    if (kgStatus) {
-      kgStatus.textContent = '正在生成酷狗登录二维码...';
-      kgStatus.className = 'preview';
-    }
-    var k = await apiJson('/api/kugou/login/qr/key?t=' + Date.now());
-    if (!k || !k.key || !k.img) throw new Error((k && (k.message || k.error)) || '酷狗二维码生成失败');
-    qrKey = k.key;
-    if (kgImg) kgImg.src = k.img;
-    if (kgStatus) {
-      kgStatus.textContent = '请使用酷狗音乐 App 扫码登录';
-      kgStatus.className = '';
-    }
-    startQrPoll();
+    dualAccountMode = false;
+    activeAccountProvider = firstLoggedProvider();
+    renderUserBtn();
+    safeRenderQueuePanel('login-modal-logout', { scrollCurrent: miniQueueOpen });
+    safeShelfRebuild('login-modal-logout');
+    showToast('已退出' + platformMeta(provider).label);
+    await refreshQr();
   } catch (e) {
-    if (kgStatus) {
-      kgStatus.textContent = '酷狗二维码生成失败: ' + (e && e.message ? e.message : e);
-      kgStatus.className = 'fail';
+    if (statusEl) {
+      statusEl.textContent = e && e.message ? e.message : '退出登录失败';
+      statusEl.className = 'fail';
     }
   }
-};
+}
 function toggleQQCookiePanel() {
   qqManualCookieOpen = !qqManualCookieOpen;
   updateLoginProviderUi();
