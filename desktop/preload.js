@@ -1,4 +1,4 @@
-const { contextBridge, ipcRenderer } = require('electron');
+const { contextBridge, ipcRenderer, webUtils } = require('electron');
 
 contextBridge.exposeInMainWorld('desktopWindow', {
   isDesktop: true,
@@ -19,6 +19,10 @@ contextBridge.exposeInMainWorld('desktopWindow', {
   configureGlobalHotkeys: (bindings) => ipcRenderer.invoke('mineradio-hotkeys-configure-global', bindings || []),
   exportJsonFile: (payload) => ipcRenderer.invoke('mineradio-export-json-file', payload || {}),
   importJsonFile: () => ipcRenderer.invoke('mineradio-import-json-file'),
+  listExternalPlayers: () => ipcRenderer.invoke('mineradio-external-players-list'),
+  chooseExternalPlayer: () => ipcRenderer.invoke('mineradio-external-player-choose'),
+  openAudioExternally: (payload) => ipcRenderer.invoke('mineradio-external-player-open-audio', payload || {}),
+  getPathForFile: (file) => webUtils.getPathForFile(file),
   onGlobalHotkey: (callback) => {
     if (typeof callback !== 'function') return () => {};
     const listener = (_event, payload) => callback(payload || {});

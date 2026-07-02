@@ -1644,6 +1644,20 @@ function qualityCandidatesFrom(target, candidates) {
 function hasNeteaseSvip(loginInfo) {
   return !!(loginInfo && loginInfo.loggedIn && (loginInfo.vipLevel === 'svip' || loginInfo.isSvip || Number(loginInfo.vipType || 0) >= 10));
 }
+function resolveNeteaseQuality(data, fallbackLevel) {
+  const raw = String(data && (data.level || data.qualityLevel || data.encodeType) || '').toLowerCase();
+  if (['jymaster', 'hires', 'lossless', 'exhigh', 'standard'].includes(raw)) return raw;
+  const br = Number(data && data.br) || 0;
+  if (br >= 1500000) return fallbackLevel === 'jymaster' ? 'jymaster' : 'hires';
+  if (br >= 700000) return 'lossless';
+  if (br >= 256000) return 'exhigh';
+  if (br > 0) return 'standard';
+  return normalizeQualityPreference(fallbackLevel);
+}
+function qualityLabelForLevel(level) {
+  const item = NETEASE_QUALITY_CANDIDATES.find(candidate => candidate.level === level);
+  return item ? item.label : level;
+}
 function mapArtists(raw) {
   return (raw || [])
     .map(a => ({ id: a && a.id, name: (a && a.name) || '' }))
@@ -3061,10 +3075,10 @@ function mapKugouTrack(raw) {
     trans.ogg_320_hash || trans.ogg_128_hash || '';
   const qualityHashes = {
     standard: raw['128hash'] || raw.hash || raw.Hash || raw.file_hash || trans.ogg_128_hash || '',
-    exhigh: raw['320hash'] || raw.HQFileHash || trans.ogg_320_hash || raw.hash || raw.Hash || raw.file_hash || '',
-    lossless: raw.sqhash || raw.SQFileHash || raw.flac_hash || raw.hash || raw.Hash || raw.file_hash || '',
-    hires: raw.hrhash || raw.high_hash || raw.sqhash || raw.SQFileHash || raw.hash || raw.Hash || raw.file_hash || '',
-    jymaster: raw.masterhash || raw.jymaster_hash || raw.hrhash || raw.sqhash || raw.SQFileHash || raw.hash || raw.Hash || raw.file_hash || '',
+    exhigh: raw['320hash'] || raw.HQFileHash || trans.ogg_320_hash || '',
+    lossless: raw.sqhash || raw.SQFileHash || raw.flac_hash || '',
+    hires: raw.hrhash || raw.high_hash || '',
+    jymaster: raw.masterhash || raw.jymaster_hash || '',
   };
   const albumAudioId = raw.album_audio_id || raw.albumAudioId || raw.audio_id || raw.audioid || raw.Audioid || raw.mixsongid || raw.songid || raw.id || '';
   const filename = cleanKugouTrackText(raw.filename || raw.FileName || '');
@@ -3121,7 +3135,7 @@ function mapKugouTrack(raw) {
   };
 }
 
-function kugouHashForQuality(hash, qualityPreference, qualityHashes) {
+function kugouHashesForQuality(hash, qualityPreference, qualityHashes) {
   const requested = normalizeQualityPreference(qualityPreference);
   const hashes = qualityHashes && typeof qualityHashes === 'object' ? qualityHashes : {};
   const orderMap = {
@@ -3132,11 +3146,17 @@ function kugouHashForQuality(hash, qualityPreference, qualityHashes) {
     standard: ['standard'],
   };
   const order = orderMap[requested] || orderMap.hires;
+  const seen = new Set();
+  const candidates = [];
   for (const key of order) {
     const candidate = String(hashes[key] || '').trim();
-    if (candidate) return { hash: candidate, level: key };
+    if (!candidate || seen.has(candidate.toLowerCase())) continue;
+    seen.add(candidate.toLowerCase());
+    candidates.push({ hash: candidate, level: key });
   }
-  return { hash: String(hash || '').trim(), level: requested };
+  const fallbackHash = String(hash || '').trim();
+  if (fallbackHash && !seen.has(fallbackHash.toLowerCase())) candidates.push({ hash: fallbackHash, level: 'standard' });
+  return candidates;
 }
 
 function sortKugouCloudTracks(rawTracks) {
@@ -3358,11 +3378,26 @@ async function handleKugouSongUrl(hash, albumAudioId, albumId, qualityPreference
   const h = String(hash || '').trim();
   if (!h) return { provider: 'kugou', url: '', playable: false, error: 'Missing Kugou hash' };
   const loginInfo = getKugouLoginInfo();
-  const selected = kugouHashForQuality(h, qualityPreference, qualityHashes);
-  const json = await kugouTrackercdnPlayUrl(selected.hash || h, { albumAudioId, albumId, vipType: loginInfo.vipType });
-  const data = json && (json.data || json);
-  const playableUrl = kugouPlayableUrlFromResponse(json);
+  const requestedQuality = normalizeQualityPreference(qualityPreference);
+  const candidates = kugouHashesForQuality(h, requestedQuality, qualityHashes);
+  let selected = candidates[0] || { hash: h, level: 'standard' };
+  let json = null;
+  let data = null;
+  let playableUrl = '';
+  let lastError = null;
+  for (const candidate of candidates.length ? candidates : [selected]) {
+    selected = candidate;
+    try {
+      json = await kugouTrackercdnPlayUrl(candidate.hash || h, { albumAudioId, albumId, vipType: loginInfo.vipType });
+      data = json && (json.data || json);
+      playableUrl = kugouPlayableUrlFromResponse(json);
+      if (playableUrl) break;
+    } catch (err) {
+      lastError = err;
+    }
+  }
   const code = json && (json.error_code || json.errcode || json.status);
+  const bitrate = Number(data && (data.bitRate || data.bitrate || data.bit_rate || data.rate)) || 0;
   const restriction = playableUrl ? null : playbackRestriction('kugou',
     loginInfo.loggedIn ? 'paid_required' : 'login_required',
     loginInfo.loggedIn ? '酷狗没有返回当前账号可播放地址，可能需要会员、购买或官方客户端权限' : '酷狗歌曲需要登录后获取播放地址',
@@ -3377,13 +3412,16 @@ async function handleKugouSongUrl(hash, albumAudioId, albumId, qualityPreference
     vipLevel: loginInfo.vipLevel || 'none',
     level: selected.level || (data && (data.audio_name || data.quality || data.bitRate || data.bitrate || '')),
     quality: data && (data.fileName || data.songName || data.extName || ''),
-    requestedQuality: normalizeQualityPreference(qualityPreference),
+    br: bitrate,
+    requestedQuality,
     resolvedHash: selected.hash || h,
+    attemptedLevels: candidates.map(candidate => candidate.level),
     trial: false,
     message: playableUrl ? '' : restriction.message,
     reason: playableUrl ? '' : restriction.category,
     restriction,
     kugouCode: code,
+    error: playableUrl ? '' : (lastError && lastError.message || ''),
   };
 }
 
@@ -3974,15 +4012,17 @@ async function handleSongUrl(id, loginInfo, qualityPreference) {
       const freeTrial = d && d.freeTrialInfo;
       console.log('[SongUrl]', q.level, '->', url ? 'OK' : 'no url', freeTrial ? '(TRIAL)' : '');
       if (url && !freeTrial) {
-        return { url, trial: false, playable: true, level: q.level, quality: q.label, br: d.br, requestedQuality };
+        const resolvedLevel = resolveNeteaseQuality(d, q.level);
+        return { url, trial: false, playable: true, level: resolvedLevel, quality: qualityLabelForLevel(resolvedLevel), br: d.br, requestedQuality };
       }
       if (url && freeTrial && !trialFallback) {
+        const resolvedLevel = resolveNeteaseQuality(d, q.level);
         trialFallback = {
           url,
           trial: true,
           playable: true,
-          level: q.level,
-          quality: q.label,
+          level: resolvedLevel,
+          quality: qualityLabelForLevel(resolvedLevel),
           br: d.br,
           requestedQuality,
           trialInfo: freeTrial,
@@ -4306,6 +4346,22 @@ const server = http.createServer(async (req, res) => {
         weather: null,
         radio: { title: '天气电台', subtitle: '天气暂时没有回来，可以先听今日推荐。', seedQueries: [], songs: [] },
       }, 500);
+    }
+    return;
+  }
+
+  if (pn === '/api/weather/current') {
+    try {
+      const weather = await fetchOpenMeteoWeather({
+        city: url.searchParams.get('city') || url.searchParams.get('q') || '',
+        lat: url.searchParams.get('lat'),
+        lon: url.searchParams.get('lon'),
+        timezone: url.searchParams.get('timezone') || '',
+      });
+      sendJSON(res, { ok: true, weather });
+    } catch (err) {
+      console.error('[WeatherCurrent]', err);
+      sendJSON(res, { ok: false, error: err.message, weather: null }, 500);
     }
     return;
   }

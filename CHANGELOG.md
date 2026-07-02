@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.1.3
+
+- 首页天气拆分为轻量实时天气与后台天气电台两条请求：定位到城市后优先显示天气、温度、体感温度和湿度，不再等待多轮歌曲推荐导致超时。
+- 首页热评严格排除播客、本地文件和非歌曲记录；每 30 秒随机选择一首真实歌曲并重新读取一条热评。
+- 新增网易云、QQ 音乐、酷狗三源优先音质设置；歌曲或账号不支持目标档位时按母带、Hi-Res、无损、320K、标准逐级降级。
+- 底部播放器显示服务端返回的实际播放音质和码率，修复请求 Hi-Res、实际仅 320 kbps 时仍误标为 Hi-Res 的问题。
+- 新增默认播放软件设置：支持 Mineradio 内置播放器、Windows 默认音频应用、自动识别网易云音乐及手动选择 EXE。
+- 云端歌曲可缓存到本机临时目录后交给外部播放器，本地歌曲可直接使用所选播放器打开；外部打开失败时自动回退 Mineradio。
+
 ## v1.1.1
 
 - P0 installer safety fix: installation now defaults to the first available non-C drive from `D:\Mineradio` through `Z:\Mineradio`; it falls back to `C:\Mineradio` only when no D-Z drive exists.

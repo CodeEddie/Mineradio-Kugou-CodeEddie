@@ -3,6 +3,7 @@ const net = require('net');
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
 const { execFile, spawn } = require('child_process');
 
 let mainWindow = null;
@@ -39,6 +40,8 @@ const QQ_LOGIN_PARTITION = 'persist:mineradio-qqmusic-login';
 const QQ_LOGIN_URL = 'https://y.qq.com/n/ryqq/profile';
 const KUGOU_LOGIN_PARTITION = 'persist:mineradio-kugou-login';
 const KUGOU_LOGIN_URL = 'https://www.kugou.com/';
+const EXTERNAL_AUDIO_MAX_BYTES = 512 * 1024 * 1024;
+const EXTERNAL_AUDIO_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 
 const CHROMIUM_PERFORMANCE_SWITCHES = [
   ['autoplay-policy', 'no-user-gesture-required'],
@@ -282,6 +285,211 @@ function focusMainWindow() {
 
 function getUpdateDownloadDir() {
   return path.join(app.getPath('userData'), 'updates');
+}
+
+function getExternalPlaybackDir() {
+  return path.join(app.getPath('temp'), 'Mineradio', 'external-playback');
+}
+
+function execFileText(file, args, options = {}) {
+  return new Promise((resolve) => {
+    execFile(file, args, { windowsHide: true, timeout: 4000, ...options }, (error, stdout) => {
+      resolve(error ? '' : String(stdout || '').trim());
+    });
+  });
+}
+
+function existingExecutable(candidate) {
+  const target = String(candidate || '').trim().replace(/^"(.*)"$/, '$1');
+  if (!target || path.extname(target).toLowerCase() !== '.exe') return '';
+  try {
+    return fs.statSync(target).isFile() ? path.resolve(target) : '';
+  } catch (_) {
+    return '';
+  }
+}
+
+async function queryWindowsAppPath(executableName) {
+  if (process.platform !== 'win32') return '';
+  const roots = [
+    `HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\${executableName}`,
+    `HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\${executableName}`,
+    `HKLM\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\App Paths\\${executableName}`,
+  ];
+  for (const root of roots) {
+    const output = await execFileText('reg.exe', ['query', root, '/ve']);
+    const match = output.match(/REG_SZ\s+(.+)\s*$/im);
+    const found = existingExecutable(match && match[1]);
+    if (found) return found;
+  }
+  return '';
+}
+
+async function findExecutableByName(executableName, candidates = []) {
+  for (const candidate of candidates) {
+    const found = existingExecutable(candidate);
+    if (found) return found;
+  }
+  const appPath = await queryWindowsAppPath(executableName);
+  if (appPath) return appPath;
+  const whereOutput = await execFileText('where.exe', [executableName]);
+  for (const candidate of whereOutput.split(/\r?\n/)) {
+    const found = existingExecutable(candidate);
+    if (found) return found;
+  }
+  return '';
+}
+
+async function detectExternalPlayers() {
+  const cloudMusicPath = await findExecutableByName('cloudmusic.exe', [
+    'D:\\software\\CloudMusic\\cloudmusic.exe',
+    path.join(process.env.LOCALAPPDATA || '', 'NetEase', 'CloudMusic', 'cloudmusic.exe'),
+    path.join(process.env.ProgramFiles || '', 'NetEase', 'CloudMusic', 'cloudmusic.exe'),
+    path.join(process.env['ProgramFiles(x86)'] || '', 'NetEase', 'CloudMusic', 'cloudmusic.exe'),
+  ]);
+  return [
+    { id: 'internal', label: 'Mineradio 内置播放器', available: true, path: '' },
+    { id: 'system', label: 'Windows 默认音频应用', available: process.platform === 'win32', path: '' },
+    { id: 'netease', label: '网易云音乐', available: !!cloudMusicPath, path: cloudMusicPath },
+  ];
+}
+
+function cleanExternalAudioName(value, fallback) {
+  const cleaned = String(value || '')
+    .replace(/[\\/:*?"<>|\u0000-\u001f]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/[. ]+$/, '');
+  return (cleaned || fallback || 'Mineradio').slice(0, 96);
+}
+
+function cleanupExternalPlaybackDir() {
+  const dir = getExternalPlaybackDir();
+  fs.mkdirSync(dir, { recursive: true });
+  const cutoff = Date.now() - EXTERNAL_AUDIO_MAX_AGE_MS;
+  for (const name of fs.readdirSync(dir)) {
+    const target = path.join(dir, name);
+    try {
+      const stat = fs.statSync(target);
+      if (stat.isFile() && stat.mtimeMs < cutoff) fs.unlinkSync(target);
+    } catch (_) {}
+  }
+  return dir;
+}
+
+function externalAudioTarget(payload = {}) {
+  const proxyPath = String(payload.proxyPath || '');
+  const localBase = `http://127.0.0.1:${mainServerPort || 3000}`;
+  const localUrl = new URL(proxyPath, localBase);
+  if (localUrl.origin !== localBase || localUrl.pathname !== '/api/audio') throw new Error('INVALID_AUDIO_PROXY_PATH');
+  const upstreamRaw = localUrl.searchParams.get('url') || '';
+  if (!/^https?:\/\//i.test(upstreamRaw)) throw new Error('INVALID_UPSTREAM_AUDIO_URL');
+  let extension = '.mp3';
+  try {
+    const upstream = new URL(upstreamRaw);
+    const detected = path.extname(upstream.pathname).toLowerCase();
+    if (['.mp3', '.flac', '.wav', '.ogg', '.m4a', '.aac'].includes(detected)) extension = detected;
+  } catch (_) {}
+  const artist = cleanExternalAudioName(payload.artist, '');
+  const title = cleanExternalAudioName(payload.title, 'Mineradio');
+  const baseName = cleanExternalAudioName([artist, title].filter(Boolean).join(' - '), title);
+  const hash = crypto.createHash('sha256').update(proxyPath).digest('hex').slice(0, 12);
+  return {
+    localUrl,
+    filePath: path.join(cleanupExternalPlaybackDir(), `${baseName}-${hash}${extension}`),
+  };
+}
+
+function downloadExternalAudio(payload = {}) {
+  const target = externalAudioTarget(payload);
+  try {
+    if (fs.statSync(target.filePath).size > 0) return Promise.resolve(target.filePath);
+  } catch (_) {}
+  const partialPath = `${target.filePath}.${process.pid}.${Date.now()}.part`;
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    function finishError(error) {
+      if (settled) return;
+      settled = true;
+      try { fs.unlinkSync(partialPath); } catch (_) {}
+      reject(error);
+    }
+    const request = http.get(target.localUrl, (response) => {
+      if (response.statusCode !== 200 && response.statusCode !== 206) {
+        response.resume();
+        finishError(new Error(`AUDIO_PROXY_HTTP_${response.statusCode || 0}`));
+        return;
+      }
+      const expected = Number(response.headers['content-length']) || 0;
+      if (expected > EXTERNAL_AUDIO_MAX_BYTES) {
+        response.destroy();
+        finishError(new Error('EXTERNAL_AUDIO_TOO_LARGE'));
+        return;
+      }
+      let received = 0;
+      const output = fs.createWriteStream(partialPath, { flags: 'wx' });
+      response.on('data', (chunk) => {
+        received += chunk.length;
+        if (received > EXTERNAL_AUDIO_MAX_BYTES) response.destroy(new Error('EXTERNAL_AUDIO_TOO_LARGE'));
+      });
+      response.pipe(output);
+      output.on('finish', () => {
+        output.close(() => {
+          try {
+            if (fs.existsSync(target.filePath)) fs.unlinkSync(partialPath);
+            else fs.renameSync(partialPath, target.filePath);
+            settled = true;
+            resolve(target.filePath);
+          } catch (e) {
+            finishError(e);
+          }
+        });
+      });
+      output.on('error', finishError);
+      response.on('error', finishError);
+    });
+    request.setTimeout(120000, () => request.destroy(new Error('EXTERNAL_AUDIO_TIMEOUT')));
+    request.on('error', finishError);
+  });
+}
+
+function validatedLocalAudioPath(filePath) {
+  const target = path.resolve(String(filePath || ''));
+  if (!['.mp3', '.flac', '.wav', '.ogg', '.m4a', '.aac'].includes(path.extname(target).toLowerCase())) return '';
+  try {
+    return fs.statSync(target).isFile() ? target : '';
+  } catch (_) {
+    return '';
+  }
+}
+
+async function openAudioWithExternalPlayer(payload = {}) {
+  const mode = String(payload.mode || 'internal');
+  if (!['system', 'netease', 'custom'].includes(mode)) return { ok: false, error: 'INVALID_EXTERNAL_PLAYER' };
+  const audioPath = validatedLocalAudioPath(payload.localFilePath) || await downloadExternalAudio(payload);
+  if (!audioPath) return { ok: false, error: 'AUDIO_FILE_MISSING' };
+  if (mode === 'system') {
+    const error = await shell.openPath(audioPath);
+    return error ? { ok: false, error } : { ok: true, mode, label: 'Windows 默认音频应用', filePath: audioPath };
+  }
+  let executable = '';
+  let label = '自选播放器';
+  if (mode === 'netease') {
+    const players = await detectExternalPlayers();
+    const netease = players.find((player) => player.id === 'netease');
+    executable = netease && netease.path || '';
+    label = '网易云音乐';
+  } else {
+    executable = existingExecutable(payload.customPath);
+  }
+  if (!executable) return { ok: false, error: 'PLAYER_NOT_FOUND' };
+  const child = spawn(executable, [audioPath], {
+    detached: true,
+    windowsHide: false,
+    stdio: 'ignore',
+  });
+  child.unref();
+  return { ok: true, mode, label, executable, filePath: audioPath };
 }
 
 function shouldEnsureDesktopShortcut() {
@@ -1340,6 +1548,37 @@ ipcMain.handle('mineradio-import-json-file', async (event) => {
     return { ok: true, filePath, text };
   } catch (e) {
     return { ok: false, error: e.message || 'IMPORT_FAILED' };
+  }
+});
+
+ipcMain.handle('mineradio-external-players-list', async () => {
+  try {
+    return { ok: true, players: await detectExternalPlayers() };
+  } catch (e) {
+    return { ok: false, error: e.message || 'PLAYER_SCAN_FAILED', players: [] };
+  }
+});
+
+ipcMain.handle('mineradio-external-player-choose', async (event) => {
+  try {
+    const result = await dialog.showOpenDialog(getSenderWindow(event), {
+      title: '选择默认播放软件',
+      properties: ['openFile'],
+      filters: [{ name: 'Windows 应用程序', extensions: ['exe'] }],
+    });
+    if (result.canceled || !result.filePaths || !result.filePaths[0]) return { ok: false, canceled: true };
+    const executable = existingExecutable(result.filePaths[0]);
+    return executable ? { ok: true, path: executable, label: path.basename(executable, '.exe') } : { ok: false, error: 'INVALID_PLAYER_PATH' };
+  } catch (e) {
+    return { ok: false, error: e.message || 'PLAYER_PICK_FAILED' };
+  }
+});
+
+ipcMain.handle('mineradio-external-player-open-audio', async (_event, payload) => {
+  try {
+    return await openAudioWithExternalPlayer(payload || {});
+  } catch (e) {
+    return { ok: false, error: e.message || 'EXTERNAL_PLAYBACK_FAILED' };
   }
 });
 

@@ -253,7 +253,11 @@ body.home-wallpaper-preview #canvas-container{filter:none}
 .home-title.home-construction-title{max-width:420px;font-size:clamp(34px,4.4vw,60px);line-height:1.02}
 .home-sub{grid-column:1;margin-top:14px;font-size:13px;line-height:1.62;color:rgba(255,255,255,.62);max-width:348px}
 .home-weather-meta{grid-column:1;display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-.home-weather-pill{height:28px;padding:0 10px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.050);display:inline-flex;align-items:center;color:rgba(255,255,255,.70);font-size:11px;font-weight:680}
+.home-weather-pill{height:28px;padding:0 10px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.050);display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.70);font-family:inherit;font-size:11px;font-weight:680}
+button.home-weather-pill{cursor:pointer;transition:color .18s,border-color .18s,background .18s,transform .18s}
+button.home-weather-pill:hover{color:#fff;border-color:color-mix(in srgb,var(--home-accent) 40%,rgba(255,255,255,.12));background:color-mix(in srgb,var(--home-accent) 10%,rgba(255,255,255,.05));transform:translateY(-1px)}
+.home-weather-pill.primary{color:#fff;border-color:color-mix(in srgb,var(--home-accent) 34%,rgba(255,255,255,.12));background:color-mix(in srgb,var(--home-accent) 12%,rgba(255,255,255,.05));box-shadow:inset 0 1px 0 rgba(255,255,255,.07)}
+.home-weather-dot{width:5px;height:5px;border-radius:50%;background:var(--home-accent);box-shadow:0 0 10px color-mix(in srgb,var(--home-accent) 70%,transparent)}
 .home-quick-row{grid-column:1;position:relative;z-index:3;display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
 .home-chip{height:32px;padding:0 13px;border-radius:999px;border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.060);color:rgba(255,255,255,.76);font-family:inherit;font-size:11.5px;font-weight:680;cursor:pointer;transition:background .18s,border-color .18s,color .18s,transform .18s,box-shadow .18s}
 .home-chip:hover{background:color-mix(in srgb,var(--home-accent) 10%,transparent);border-color:color-mix(in srgb,var(--home-accent) 38%,rgba(255,255,255,.10));color:#fff;box-shadow:0 10px 26px color-mix(in srgb,var(--home-accent) 8%,transparent);transform:translateY(-1px)}
@@ -266,8 +270,15 @@ body.home-wallpaper-preview #canvas-container{filter:none}
 .home-start-card::before{content:'';position:absolute;inset:16px;border-radius:18px;background:linear-gradient(135deg,color-mix(in srgb,var(--home-accent) 64%,rgba(255,255,255,.18)),rgba(36,66,255,.30)),repeating-linear-gradient(120deg,rgba(255,255,255,.18) 0 3px,transparent 3px 15px)}
 .home-start-card.one{left:0;bottom:22px;transform:rotate(-9deg)}
 .home-start-card.two{right:4px;top:10px;transform:rotate(7deg)}
-.home-start-wave{grid-column:1 / -1;grid-row:5;align-self:end;height:104px;border-radius:22px;border:1px solid rgba(255,255,255,.075);background:linear-gradient(135deg,rgba(255,255,255,.050),rgba(255,255,255,.018));display:flex;align-items:center;gap:6px;padding:0 18px;overflow:hidden}
-.home-start-wave span{flex:1;min-width:5px;height:var(--h,26px);border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.92),color-mix(in srgb,var(--home-accent) 72%,#2442ff));opacity:.72;box-shadow:0 0 16px color-mix(in srgb,var(--home-accent) 28%,transparent);animation:home-eq-rise 2.4s ease-in-out infinite;animation-delay:var(--d,0s)}
+.home-start-wave{grid-column:1 / -1;grid-row:5;align-self:end;position:relative;height:104px;border-radius:22px;border:1px solid rgba(255,255,255,.075);background:linear-gradient(135deg,rgba(255,255,255,.050),rgba(255,255,255,.018));padding:16px 18px;overflow:hidden}
+.home-hot-comment-wave{position:absolute;inset:18px 18px 16px 46%;display:flex;align-items:center;gap:6px;opacity:.22;filter:saturate(.72);pointer-events:none}
+.home-start-wave .home-hot-comment-wave>span{flex:1;min-width:5px;height:var(--h,26px);border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.92),color-mix(in srgb,var(--home-accent) 72%,#2442ff));box-shadow:0 0 16px color-mix(in srgb,var(--home-accent) 28%,transparent);animation:home-eq-rise 2.4s ease-in-out infinite;animation-delay:var(--d,0s)}
+.home-hot-comment-copy{position:relative;z-index:1;width:min(78%,520px);height:100%;display:flex;flex-direction:column;justify-content:center;gap:5px}
+.home-hot-comment-kicker{display:flex;align-items:center;gap:8px;color:color-mix(in srgb,var(--home-accent) 54%,rgba(255,255,255,.48));font-size:9.5px;font-weight:780;letter-spacing:.13em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.home-hot-comment-kicker::before{content:'';width:16px;height:1px;background:currentColor;flex:0 0 auto}
+.home-hot-comment-text{margin:0;color:rgba(255,255,255,.88);font-size:13px;font-weight:650;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-wrap:pretty}
+.home-hot-comment-byline{font-size:10px;color:rgba(255,255,255,.42);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.home-start-wave.is-loading .home-hot-comment-text{color:rgba(255,255,255,.50)}
 @media (max-width:840px){.home-start-stack{display:none}.home-hero-inner.home-construction-inner{grid-template-columns:1fr}}
 @media (max-width:620px){.home-start-wave{display:none}.home-hero-inner.home-construction-inner{display:flex;flex-direction:column;justify-content:center;align-items:flex-start}}
 .home-visual{grid-column:2;grid-row:2 / span 2;position:relative;align-self:center;justify-self:end;width:100%;max-width:300px;height:74px;margin-top:0;pointer-events:none;filter:drop-shadow(0 18px 34px rgba(0,0,0,.28))}
@@ -570,6 +581,11 @@ body.home-controls-locked #bottom-bar{opacity:0!important;pointer-events:none!im
 .control-meta{min-width:0;max-width:360px;display:flex;flex-direction:column;gap:3px}
 .control-title{font-size:13.5px;font-weight:700;color:rgba(255,255,255,.92);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
 .control-artist{font-size:11.5px;color:rgba(255,255,255,.48);line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.control-subline{display:flex;align-items:center;gap:7px;min-width:0}
+.control-subline .control-artist{min-width:0;max-width:100%}
+.control-quality-badge{display:none;flex:0 0 auto;height:17px;padding:0 6px;border-radius:999px;border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.055);color:rgba(239,246,255,.72);font-size:8.5px;font-weight:800;line-height:15px;letter-spacing:.04em;white-space:nowrap;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.control-quality-badge.visible{display:inline-flex;align-items:center}
+.control-quality-badge.is-downgraded{border-color:rgba(244,210,138,.24);color:rgba(244,220,168,.82)}
 .control-title:hover,.control-artist:hover{color:#fff;text-shadow:0 0 16px rgba(0,245,212,.20)}
 .ctrl-btn{flex:0 0 auto;width:36px;height:36px;background:transparent;border:0;border-radius:11px;color:rgba(255,255,255,0.70);cursor:pointer;transition:color .18s,transform .18s,text-shadow .18s,background .18s,box-shadow .18s;display:flex;align-items:center;justify-content:center;padding:0;will-change:transform}
 .ctrl-btn:focus{outline:none}
@@ -604,6 +620,18 @@ body.home-controls-locked #bottom-bar{opacity:0!important;pointer-events:none!im
 .quality-option.active{color:#eaf2ff;border-color:rgba(157,184,207,.46);background:rgba(157,184,207,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
 .quality-option.locked{opacity:.42;cursor:not-allowed;transform:none!important}
 .quality-option.locked small::after{content:' · 需网易云SVIP';color:rgba(244,210,138,.88)}
+.playback-quality-setting{margin:7px 0 12px;padding:10px;border-radius:13px;border:1px solid rgba(255,255,255,.065);background:rgba(255,255,255,.026)}
+.playback-quality-note{margin:7px 2px 0;color:rgba(255,255,255,.42);font-size:10px;line-height:1.45}
+.playback-quality-setting .fx-seg{grid-template-columns:repeat(5,minmax(0,1fr));margin:0}
+.playback-quality-setting .fx-seg button{min-width:0;padding:0 4px;font-size:10px}
+.external-player-setting{margin:7px 0 12px;padding:10px;border-radius:13px;border:1px solid rgba(255,255,255,.065);background:rgba(255,255,255,.026)}
+.external-player-setting .fx-seg{margin:0}
+.external-player-setting .fx-seg button{min-width:0;padding:0 6px;font-size:10px}
+.external-player-actions{display:flex;align-items:center;gap:7px;margin-top:8px}
+.external-player-path{min-width:0;flex:1;color:rgba(255,255,255,.42);font-size:9.5px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.external-player-path.ready{color:rgba(210,244,241,.72)}
+.external-player-path.missing{color:rgba(244,210,138,.74)}
+.external-player-actions .fx-mini-btn{height:26px;min-width:64px;padding:0 9px;font-size:10px}
 #volume-slider{width:92px;accent-color:var(--fc-accent);cursor:pointer}
 #volume-value{width:34px;text-align:right;font-size:10px;color:rgba(255,255,255,.52);font-variant-numeric:tabular-nums}
 .mini-queue-popover{position:absolute;left:50%;bottom:calc(100% + 14px);width:min(420px,calc(100vw - 32px));max-height:min(420px,calc(100vh - 170px));padding:14px;border-radius:16px;border:1px solid rgba(255,255,255,.075);background:linear-gradient(145deg,rgba(18,18,23,.82),rgba(8,8,12,.88));backdrop-filter:blur(30px) saturate(1.08);-webkit-backdrop-filter:blur(30px) saturate(1.08);box-shadow:0 22px 70px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.065);opacity:0;pointer-events:none;transform:translateX(-50%) translateY(12px) scale(.98);transition:opacity .22s,transform .22s;z-index:7;overflow:hidden}
@@ -2072,8 +2100,15 @@ html.control-glass-svg-ok #visual-guide-btn:hover{
           <div class="home-start-card one"></div>
           <div class="home-start-card two"></div>
         </div>
-        <div class="home-start-wave" aria-hidden="true">
-          <span style="--h:22px;--d:-.2s"></span><span style="--h:48px;--d:-.8s"></span><span style="--h:31px;--d:-1.1s"></span><span style="--h:68px;--d:-.4s"></span><span style="--h:42px;--d:-1.5s"></span><span style="--h:76px;--d:-.7s"></span><span style="--h:36px;--d:-1.9s"></span><span style="--h:58px;--d:-1.2s"></span><span style="--h:28px;--d:-.5s"></span><span style="--h:64px;--d:-1.7s"></span><span style="--h:40px;--d:-.9s"></span><span style="--h:52px;--d:-1.4s"></span>
+        <div class="home-start-wave is-loading" id="home-hot-comment-card" aria-live="polite">
+          <div class="home-hot-comment-wave" aria-hidden="true">
+            <span style="--h:22px;--d:-.2s"></span><span style="--h:48px;--d:-.8s"></span><span style="--h:31px;--d:-1.1s"></span><span style="--h:68px;--d:-.4s"></span><span style="--h:42px;--d:-1.5s"></span><span style="--h:76px;--d:-.7s"></span><span style="--h:36px;--d:-1.9s"></span><span style="--h:58px;--d:-1.2s"></span><span style="--h:28px;--d:-.5s"></span><span style="--h:64px;--d:-1.7s"></span><span style="--h:40px;--d:-.9s"></span><span style="--h:52px;--d:-1.4s"></span>
+          </div>
+          <div class="home-hot-comment-copy">
+            <div class="home-hot-comment-kicker" id="home-hot-comment-kicker">RECENT VOICES</div>
+            <blockquote class="home-hot-comment-text" id="home-hot-comment-text">听过几首歌后，这里会随机出现最近播放的热评。</blockquote>
+            <div class="home-hot-comment-byline" id="home-hot-comment-byline">来自你的最近播放</div>
+          </div>
         </div>
       </div>
     </div>
@@ -2153,6 +2188,32 @@ html.control-glass-svg-ok #visual-guide-btn:hover{
   <div class="preset-grid" id="preset-grid"></div>
   <div class="fx-section-label">用户存档</div>
   <div class="user-archive-grid" id="user-archive-grid"></div>
+  <div class="fx-section-label">播放音质</div>
+  <div class="playback-quality-setting">
+    <div class="fx-seg" id="playback-quality-seg" title="优先请求所选音质，不可用时自动逐级降低">
+      <button type="button" data-playback-quality="jymaster" onclick="setPlaybackQuality('jymaster')">母带</button>
+      <button type="button" data-playback-quality="hires" onclick="setPlaybackQuality('hires')">Hi-Res</button>
+      <button type="button" data-playback-quality="lossless" onclick="setPlaybackQuality('lossless')">无损</button>
+      <button type="button" data-playback-quality="exhigh" onclick="setPlaybackQuality('exhigh')">320K</button>
+      <button type="button" data-playback-quality="standard" onclick="setPlaybackQuality('standard')">标准</button>
+    </div>
+    <div class="playback-quality-note">网易云、QQ 音乐与酷狗会优先请求所选档位；账号或歌曲不支持时自动逐级降级。</div>
+  </div>
+  <div class="fx-section-label">默认播放软件</div>
+  <div class="external-player-setting">
+    <div class="fx-seg" id="external-player-seg">
+      <button type="button" data-external-player="internal" onclick="setExternalPlaybackMode('internal')">Mineradio</button>
+      <button type="button" data-external-player="system" onclick="setExternalPlaybackMode('system')">Windows 默认</button>
+      <button type="button" data-external-player="netease" onclick="setExternalPlaybackMode('netease')">网易云</button>
+      <button type="button" data-external-player="custom" onclick="setExternalPlaybackMode('custom')">自选</button>
+    </div>
+    <div class="external-player-actions">
+      <div class="external-player-path" id="external-player-path">正在读取本机播放器…</div>
+      <button class="fx-mini-btn ghost" type="button" onclick="chooseExternalPlaybackApp()">选择 EXE</button>
+      <button class="fx-mini-btn ghost" type="button" onclick="refreshExternalPlayers(true)">重新扫描</button>
+    </div>
+    <div class="playback-quality-note">外部播放会先缓存云端音频；暂停与进度请在外部软件中控制。打开失败时自动回到内置播放器。</div>
+  </div>
   <div class="fx-section-label">自定义颜色</div>
   <div class="lyric-color-row">
     <input id="ui-accent-picker" class="lyric-color-picker" type="color" value="#00f5d4" title="界面高亮色">
@@ -2555,13 +2616,16 @@ html.control-glass-svg-ok #visual-guide-btn:hover{
         <div id="control-cover" class="control-cover cover-empty" aria-hidden="true"></div>
         <div class="control-meta">
           <div id="control-title" class="control-title" onclick="openTrackDetailModal('song')" title="歌曲详情"></div>
-          <div id="control-artist" class="control-artist" onclick="openTrackDetailModal('artist')" title="歌手详情"></div>
+          <div class="control-subline">
+            <div id="control-artist" class="control-artist" onclick="openTrackDetailModal('artist')" title="歌手详情"></div>
+            <span id="control-quality-badge" class="control-quality-badge" title="当前实际播放音质"></span>
+          </div>
         </div>
       </div>
       <div id="quality-control" class="quality-control">
         <button id="quality-btn" class="ctrl-btn quality-pill" onclick="toggleQualityPanel(event)" title="音质"><span id="quality-btn-label">臻音</span></button>
         <div class="quality-popover" onclick="event.stopPropagation()">
-          <button class="quality-option svip-only" data-quality="jymaster" data-svip="1" onclick="setPlaybackQuality('jymaster')"><span>超清母带</span><small>SVIP / 最高规格</small></button>
+          <button class="quality-option" data-quality="jymaster" onclick="setPlaybackQuality('jymaster')"><span>超清母带</span><small>有则优先 / 自动降级</small></button>
           <button class="quality-option" data-quality="hires" onclick="setPlaybackQuality('hires')"><span>高清臻音</span><small>默认 / 细节优先</small></button>
           <button class="quality-option" data-quality="lossless" onclick="setPlaybackQuality('lossless')"><span>无损 SQ</span><small>FLAC 优先</small></button>
           <button class="quality-option" data-quality="exhigh" onclick="setPlaybackQuality('exhigh')"><span>极高 HQ</span><small>320kbps</small></button>
@@ -2871,6 +2935,7 @@ var CUSTOM_LYRIC_PREF_STORE_KEY = 'mineradio-custom-lyric-prefs-v1';
 var LYRIC_LAYOUT_STORE_KEY = 'mineradio-lyric-layout-v1';
 var VISUAL_PRESET_SCHEMA = 'skull-preset-v2';
 var PLAYBACK_QUALITY_STORE_KEY = 'mineradio-playback-quality-v1';
+var EXTERNAL_PLAYER_STORE_KEY = 'mineradio-external-player-v1';
 var UPLOAD_TIP_STORE_KEY = 'mineradio-upload-tip-seen';
 var DIY_MODE_STORE_KEY = 'mineradio-diy-player-mode-v1';
 var PLAYLIST_PANEL_PIN_STORE_KEY = 'mineradio-playlist-panel-pinned-v1';
@@ -2901,6 +2966,11 @@ var customLyricPrefs = readCustomLyricPrefs();
 var localBeatMapCache = readLocalBeatMapCache();
 var localBeatMapPrefs = readLocalBeatPrefs();
 var playbackQuality = readPlaybackQualityPreference();
+var currentResolvedPlaybackQuality = null;
+var externalPlaybackPreference = readExternalPlaybackPreference();
+var externalPlayersState = { loading: false, players: [], error: '' };
+var externalPlaybackActive = false;
+var externalPlaybackLabel = '';
 var qqPlaybackQualityCeiling = '';
 var coverCropState = null, coverCropBound = false;
 var currentLocalSong = null;
@@ -2921,10 +2991,14 @@ var homeVisualPresetActive = false;
 var homeVisualPrevPreset = 0;
 var HOME_LISTEN_STATS_KEY = 'mineradio-listen-stats-v1';
 var HOME_WEATHER_CITY_KEY = 'mineradio-weather-city';
-var homeWeatherRadioState = { loading: false, loaded: false, city: localStorage.getItem(HOME_WEATHER_CITY_KEY) || '上海', weather: null, radio: null, error: '', updatedAt: 0 };
+var HOME_WEATHER_LOCATION_MODE_KEY = 'mineradio-weather-location-mode-v1';
+var HOME_WEATHER_LOCATION_AT_KEY = 'mineradio-weather-location-at-v1';
+var homeWeatherLocationMode = localStorage.getItem(HOME_WEATHER_LOCATION_MODE_KEY) || 'auto';
+var homeWeatherRadioState = { loading: false, loaded: false, city: localStorage.getItem(HOME_WEATHER_CITY_KEY) || '当前位置', weather: null, radio: null, error: '', updatedAt: 0 };
 var homeWeatherToken = 0;
 var homeWeatherLoadTimer = null;
 var homeWeatherLoadPromise = null;
+var homeHotCommentState = { loading: false, loadedSignature: '', items: [], index: 0, loadTimer: null, rotateTimer: null };
 var weatherRadioStartBusy = false;
 var activeRadioContext = null;
 var listenStatsState = loadListenStatsState();
@@ -15316,7 +15390,7 @@ function normalizePlaybackQuality(value) {
   if (value === 'hires' || value === 'hi-res' || value === 'highres' || value === 'highest') return 'hires';
   if (value === 'lossless' || value === 'flac' || value === 'sq') return 'lossless';
   if (value === 'exhigh' || value === 'high' || value === '320k' || value === 'hq') return 'exhigh';
-  if (value === 'standard' || value === 'normal' || value === 'std') return 'standard';
+  if (value === 'standard' || value === 'normal' || value === 'std' || value === 'aac' || value === 'm4a') return 'standard';
   return 'hires';
 }
 function playbackQualityLabel(value) {
@@ -15369,6 +15443,37 @@ function playbackResolvedQualityText(data) {
   var br = playbackBitrateLabel(data.br);
   return br ? (label + ' · ' + br) : label;
 }
+function clearResolvedPlaybackQualityUi() {
+  currentResolvedPlaybackQuality = null;
+  var badge = document.getElementById('control-quality-badge');
+  if (!badge) return;
+  badge.textContent = '';
+  badge.title = '当前实际播放音质';
+  badge.classList.remove('visible', 'is-downgraded');
+}
+function updateResolvedPlaybackQualityUi(data, provider, requestedQuality) {
+  var badge = document.getElementById('control-quality-badge');
+  if (!badge || !data || !data.url) {
+    clearResolvedPlaybackQualityUi();
+    return;
+  }
+  var resolved = normalizePlaybackQuality(data.level || data.quality || requestedQuality || playbackQuality);
+  var providerLabel = provider === 'qq' ? 'QQ 音乐' : (provider === 'kugou' ? '酷狗音乐' : '网易云');
+  var qualityLabel = playbackQualityShortLabelForProvider(resolved, provider);
+  var bitrate = playbackBitrateLabel(data.br);
+  var downgraded = playbackQualityWasDowngraded(requestedQuality || playbackQuality, resolved);
+  currentResolvedPlaybackQuality = {
+    provider: provider,
+    requested: normalizePlaybackQuality(requestedQuality || playbackQuality),
+    resolved: resolved,
+    bitrate: Number(data.br) || 0,
+    downgraded: downgraded,
+  };
+  badge.textContent = qualityLabel + (bitrate ? ' · ' + bitrate : '');
+  badge.title = providerLabel + ' · 当前实际播放 ' + playbackQualityLabelForProvider(resolved, provider) + (bitrate ? ' · ' + bitrate : '') + (downgraded ? ' · 已自动降级' : '');
+  badge.classList.add('visible');
+  badge.classList.toggle('is-downgraded', downgraded);
+}
 function readPlaybackQualityPreference() {
   try {
     return normalizePlaybackQuality(localStorage.getItem(PLAYBACK_QUALITY_STORE_KEY) || 'hires');
@@ -15378,6 +15483,170 @@ function readPlaybackQualityPreference() {
 }
 function savePlaybackQualityPreference() {
   try { localStorage.setItem(PLAYBACK_QUALITY_STORE_KEY, playbackQuality); } catch (e) {}
+}
+function readExternalPlaybackPreference() {
+  try {
+    var raw = JSON.parse(localStorage.getItem(EXTERNAL_PLAYER_STORE_KEY) || '{}') || {};
+    var mode = ['internal', 'system', 'netease', 'custom'].indexOf(raw.mode) >= 0 ? raw.mode : 'internal';
+    return { mode: mode, customPath: String(raw.customPath || ''), customLabel: String(raw.customLabel || '') };
+  } catch (e) {
+    return { mode: 'internal', customPath: '', customLabel: '' };
+  }
+}
+function saveExternalPlaybackPreference() {
+  try { localStorage.setItem(EXTERNAL_PLAYER_STORE_KEY, JSON.stringify(externalPlaybackPreference)); } catch (e) {}
+}
+function externalPlayerInfo(mode) {
+  return (externalPlayersState.players || []).find(function(player){ return player && player.id === mode; }) || null;
+}
+function externalPlayerDisplayLabel(mode) {
+  if (mode === 'system') return 'Windows 默认音频应用';
+  if (mode === 'netease') return '网易云音乐';
+  if (mode === 'custom') return externalPlaybackPreference.customLabel || '自选播放器';
+  return 'Mineradio 内置播放器';
+}
+function canUseExternalPlaybackMode(mode) {
+  if (mode === 'internal') return true;
+  if (!window.desktopWindow || typeof window.desktopWindow.openAudioExternally !== 'function') return false;
+  if (mode === 'system') return true;
+  if (mode === 'custom') return !!externalPlaybackPreference.customPath;
+  var info = externalPlayerInfo(mode);
+  return !!(info && info.available);
+}
+function renderExternalPlayerSetting() {
+  document.querySelectorAll('[data-external-player]').forEach(function(button){
+    var mode = button.dataset.externalPlayer || 'internal';
+    var available = canUseExternalPlaybackMode(mode);
+    button.classList.toggle('active', mode === externalPlaybackPreference.mode);
+    button.classList.toggle('unavailable', mode !== 'internal' && !available);
+    button.title = available ? externalPlayerDisplayLabel(mode) : (mode === 'netease' ? '未找到 cloudmusic.exe' : '当前不可用');
+  });
+  var pathEl = document.getElementById('external-player-path');
+  if (!pathEl) return;
+  var currentMode = externalPlaybackPreference.mode;
+  var currentInfo = externalPlayerInfo(currentMode);
+  var displayPath = currentMode === 'custom'
+    ? externalPlaybackPreference.customPath
+    : (currentInfo && currentInfo.path || '');
+  pathEl.classList.remove('ready', 'missing');
+  if (!window.desktopWindow) {
+    pathEl.textContent = '仅 Windows 桌面版可使用外部播放器';
+    pathEl.classList.add('missing');
+  } else if (externalPlayersState.loading) {
+    pathEl.textContent = '正在读取本机播放器…';
+  } else if (currentMode === 'internal') {
+    pathEl.textContent = '歌曲由 Mineradio 播放，完整支持视觉与进度控制';
+    pathEl.classList.add('ready');
+  } else if (currentMode === 'system') {
+    pathEl.textContent = '使用 Windows 当前默认的音频文件关联应用';
+    pathEl.classList.add('ready');
+  } else if (displayPath) {
+    pathEl.textContent = displayPath;
+    pathEl.title = displayPath;
+    pathEl.classList.add('ready');
+  } else {
+    pathEl.textContent = currentMode === 'netease' ? '未找到 cloudmusic.exe，可选择 EXE' : '尚未选择播放器 EXE';
+    pathEl.classList.add('missing');
+  }
+}
+async function refreshExternalPlayers(showResult) {
+  if (!window.desktopWindow || typeof window.desktopWindow.listExternalPlayers !== 'function') {
+    renderExternalPlayerSetting();
+    return;
+  }
+  if (externalPlayersState.loading) return;
+  externalPlayersState.loading = true;
+  externalPlayersState.error = '';
+  renderExternalPlayerSetting();
+  try {
+    var result = await window.desktopWindow.listExternalPlayers();
+    externalPlayersState.players = result && result.players || [];
+    externalPlayersState.error = result && !result.ok ? (result.error || 'PLAYER_SCAN_FAILED') : '';
+    if (showResult) {
+      var netease = externalPlayerInfo('netease');
+      showToast(netease && netease.available ? '已找到网易云音乐' : '未找到网易云音乐，可手动选择 EXE');
+    }
+  } catch (e) {
+    externalPlayersState.error = e && e.message || 'PLAYER_SCAN_FAILED';
+  } finally {
+    externalPlayersState.loading = false;
+    renderExternalPlayerSetting();
+  }
+}
+async function setExternalPlaybackMode(mode) {
+  mode = ['internal', 'system', 'netease', 'custom'].indexOf(mode) >= 0 ? mode : 'internal';
+  if (mode !== 'internal' && !window.desktopWindow) {
+    showToast('外部播放器仅在 Windows 桌面版可用');
+    return;
+  }
+  if (mode === 'netease' && !externalPlayerInfo('netease')) await refreshExternalPlayers(false);
+  if (mode === 'custom' && !externalPlaybackPreference.customPath) {
+    await chooseExternalPlaybackApp();
+    return;
+  }
+  if (!canUseExternalPlaybackMode(mode)) {
+    showToast(mode === 'netease' ? '未找到网易云音乐，请选择 EXE' : '该播放器当前不可用');
+    return;
+  }
+  externalPlaybackPreference.mode = mode;
+  saveExternalPlaybackPreference();
+  renderExternalPlayerSetting();
+  showToast('默认播放软件: ' + externalPlayerDisplayLabel(mode) + ' · 下次播放生效');
+}
+async function chooseExternalPlaybackApp() {
+  if (!window.desktopWindow || typeof window.desktopWindow.chooseExternalPlayer !== 'function') {
+    showToast('仅 Windows 桌面版可选择播放器');
+    return;
+  }
+  var result = await window.desktopWindow.chooseExternalPlayer();
+  if (!result || !result.ok) {
+    if (!result || !result.canceled) showToast('播放器选择失败');
+    return;
+  }
+  externalPlaybackPreference = { mode: 'custom', customPath: result.path || '', customLabel: result.label || '自选播放器' };
+  saveExternalPlaybackPreference();
+  renderExternalPlayerSetting();
+  showToast('默认播放软件: ' + externalPlaybackPreference.customLabel);
+}
+function externalPlaybackPreferred() {
+  return externalPlaybackPreference.mode !== 'internal' && canUseExternalPlaybackMode(externalPlaybackPreference.mode);
+}
+async function openResolvedSongExternally(song, data, token) {
+  if (!externalPlaybackPreferred() || !data || !data.url) return false;
+  showToast('正在缓存歌曲并打开 ' + externalPlayerDisplayLabel(externalPlaybackPreference.mode));
+  try {
+    var result = await window.desktopWindow.openAudioExternally({
+      mode: externalPlaybackPreference.mode,
+      customPath: externalPlaybackPreference.customPath || '',
+      proxyPath: '/api/audio?url=' + encodeURIComponent(data.url),
+      title: song && (song.name || song.title) || 'Mineradio',
+      artist: song && song.artist || '',
+    });
+    if (token !== trackSwitchToken) return !!(result && result.ok);
+    if (!result || !result.ok) {
+      showSourceFallbackNotice('外部播放器打开失败', '已自动改用 Mineradio 内置播放器。');
+      return false;
+    }
+    if (audio) {
+      audio.pause();
+      audio.removeAttribute('src');
+      try { audio.load(); } catch (e) {}
+    }
+    externalPlaybackActive = true;
+    externalPlaybackLabel = result.label || externalPlayerDisplayLabel(externalPlaybackPreference.mode);
+    playing = false;
+    setPlayIcon(false);
+    setProgressVisual(0);
+    updatePlaybackProgressUi();
+    hideLoading();
+    forcePlaybackControlsInteractive();
+    showSourceFallbackNotice('已交给' + externalPlaybackLabel, '暂停、进度和音量请在外部播放器中控制。');
+    return true;
+  } catch (e) {
+    console.warn('[ExternalPlayback]', e);
+    if (token === trackSwitchToken) showSourceFallbackNotice('外部播放器打开失败', '已自动改用 Mineradio 内置播放器。');
+    return false;
+  }
 }
 function currentPlaybackQualityProvider() {
   var song = currentIdx >= 0 && playQueue && playQueue[currentIdx] ? playQueue[currentIdx] : null;
@@ -15415,7 +15684,7 @@ function updateQualityOptionText(provider) {
       standard: ['标准', '128kbps'],
     }
     : {
-      jymaster: ['超清母带', 'SVIP / 最高规格'],
+      jymaster: ['超清母带', '有则优先 / 自动降级'],
       hires: ['高清臻音', '默认 / 细节优先'],
       lossless: ['无损 SQ', 'FLAC 优先'],
       exhigh: ['极高 HQ', '320kbps'],
@@ -15434,30 +15703,24 @@ function updatePlaybackQualityUi() {
   var label = document.getElementById('quality-btn-label');
   var btn = document.getElementById('quality-btn');
   var provider = currentPlaybackQualityProvider();
-  var canUseSvip = provider === 'kugou' ? true : hasProviderSvip('netease', loginStatus);
-  var displayQuality = playbackQuality === 'jymaster' && !canUseSvip ? 'hires' : playbackQuality;
   updateQualityOptionText(provider);
-  if (label) label.textContent = playbackQualityShortLabelForProvider(displayQuality, provider);
-  if (btn) btn.title = playbackQuality === 'jymaster' && !canUseSvip
-    ? '音质: ' + playbackQualityLabel(displayQuality) + ' · 超清母带需网易云 SVIP'
-    : '音质: ' + playbackQualityLabelForProvider(displayQuality, provider);
+  if (label) label.textContent = playbackQualityShortLabelForProvider(playbackQuality, provider);
+  if (btn) btn.title = '优先音质: ' + playbackQualityLabelForProvider(playbackQuality, provider) + ' · 不可用时自动降级';
   document.querySelectorAll('.quality-option').forEach(function(option){
     var q = normalizePlaybackQuality(option.dataset.quality);
-    var locked = provider !== 'kugou' && option.dataset.svip === '1' && !canUseSvip;
-    option.classList.toggle('active', q === displayQuality);
-    option.classList.toggle('locked', locked);
-    option.disabled = locked;
-    option.title = locked ? '需要网易云 SVIP 账号' : playbackQualityLabelForProvider(q, provider);
+    option.classList.toggle('active', q === playbackQuality);
+    option.classList.remove('locked');
+    option.disabled = false;
+    option.title = playbackQualityLabelForProvider(q, provider) + '优先，不可用时自动降级';
+  });
+  document.querySelectorAll('[data-playback-quality]').forEach(function(option){
+    var q = normalizePlaybackQuality(option.dataset.playbackQuality);
+    option.classList.toggle('active', q === playbackQuality);
+    option.title = playbackQualityLabel(q) + '优先，不可用时自动降级';
   });
 }
 function setPlaybackQuality(value) {
   var next = normalizePlaybackQuality(value);
-  var provider = currentPlaybackQualityProvider();
-  if (provider !== 'kugou' && next === 'jymaster' && !hasProviderSvip('netease', loginStatus)) {
-    showToast(hasPlatformLogin('netease') ? '超清母带需要网易云 SVIP' : '登录网易云 SVIP 后可用超清母带');
-    if (!hasPlatformLogin('netease')) openProviderLogin('netease');
-    return;
-  }
   playbackQuality = next;
   savePlaybackQualityPreference();
   updatePlaybackQualityUi();
@@ -15506,6 +15769,8 @@ function bindQualityControl() {
     if (wrap && !wrap.contains(e.target)) wrap.classList.remove('open');
   });
   updatePlaybackQualityUi();
+  renderExternalPlayerSetting();
+  refreshExternalPlayers(false);
 }
 function isTypingTarget(target) {
   if (!target) return false;
@@ -15732,6 +15997,130 @@ function homeListenSummary() {
   var totalPlays = Object.keys(listenStatsState.songs || {}).reduce(function(sum, key){ return sum + ((listenStatsState.songs[key] && listenStatsState.songs[key].plays) || 0); }, 0);
   return { recent: recent, topSong: topSong, topArtist: topArtist, totalPlays: totalPlays };
 }
+function homeCommentRecordProvider(record) {
+  if (!record) return '';
+  var key = String(record.sourceKey || record.provider || record.type || '').toLowerCase();
+  if (key === 'qq') return 'qq';
+  if (key === 'netease' || key === 'song') return record.id ? 'netease' : '';
+  return '';
+}
+function homeCommentRecordSignature(record) {
+  return [homeCommentRecordProvider(record), record && (record.id || record.mid || record.key || '')].join(':');
+}
+function homeRecentCommentRecords() {
+  var seen = {};
+  var candidates = (listenStatsState.history || []).concat(
+    (playQueue || []).filter(function(song){ return song && song !== currentLocalSong; }),
+    homeDiscoverState.songs || [],
+    homeWeatherRadioState.radio && homeWeatherRadioState.radio.songs || []
+  );
+  return candidates.filter(function(record){
+    var type = String(record && record.type || '').toLowerCase();
+    if (type !== 'song' && type !== 'qq') return false;
+    var provider = homeCommentRecordProvider(record);
+    var signature = homeCommentRecordSignature(record);
+    if ((provider !== 'netease' && provider !== 'qq') || !signature || seen[signature]) return false;
+    seen[signature] = true;
+    return true;
+  }).slice(0, 24);
+}
+function shuffleHomeComments(items) {
+  items = (items || []).slice();
+  for (var i = items.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var swap = items[i];
+    items[i] = items[j];
+    items[j] = swap;
+  }
+  return items;
+}
+function renderHomeHotComment() {
+  var card = document.getElementById('home-hot-comment-card');
+  var kicker = document.getElementById('home-hot-comment-kicker');
+  var text = document.getElementById('home-hot-comment-text');
+  var byline = document.getElementById('home-hot-comment-byline');
+  if (!card || !kicker || !text || !byline) return;
+  var items = homeHotCommentState.items || [];
+  if (!items.length) {
+    card.classList.toggle('is-loading', homeHotCommentState.loading);
+    kicker.textContent = homeHotCommentState.loading ? 'RECENT VOICES · LOADING' : 'RECENT VOICES';
+    text.textContent = homeHotCommentState.loading
+      ? '正在从最近播放里拾取一条热评…'
+      : ((listenStatsState.history || []).length ? '最近播放暂时没有可展示的热评。' : '听过几首歌后，这里会随机出现最近播放的热评。');
+    byline.textContent = '来自你的最近播放';
+    return;
+  }
+  var item = items[homeHotCommentState.index % items.length];
+  var source = item.provider === 'qq' ? 'QQ MUSIC' : 'NETEASE';
+  card.classList.remove('is-loading');
+  kicker.textContent = 'RECENT VOICES · ' + source;
+  text.textContent = item.content || '';
+  byline.textContent = (item.nickname || '音乐用户') + ' · ' + (item.songName || '最近播放') + (item.likedCount ? ' · ' + item.likedCount + ' 赞' : '');
+}
+function scheduleHomeHotCommentRotation() {
+  if (homeHotCommentState.rotateTimer) clearTimeout(homeHotCommentState.rotateTimer);
+  if (!emptyHomeActive) return;
+  homeHotCommentState.rotateTimer = setTimeout(function(){
+    if (!emptyHomeActive) return;
+    loadHomeRecentHotComments(true);
+  }, 30000);
+}
+async function loadHomeRecentHotComments(force) {
+  var records = homeRecentCommentRecords();
+  if (!records.length || homeHotCommentState.loading) {
+    renderHomeHotComment();
+    scheduleHomeHotCommentRotation();
+    return;
+  }
+  var previousSignature = homeHotCommentState.loadedSignature;
+  var choices = records.filter(function(record){ return homeCommentRecordSignature(record) !== previousSignature; });
+  if (!choices.length) choices = records;
+  var record = choices[Math.floor(Math.random() * choices.length)];
+  var signature = homeCommentRecordSignature(record);
+  if (!force && homeHotCommentState.loadedSignature === signature && homeHotCommentState.items.length) {
+    renderHomeHotComment();
+    scheduleHomeHotCommentRotation();
+    return;
+  }
+  homeHotCommentState.loading = true;
+  renderHomeHotComment();
+  try {
+    var provider = homeCommentRecordProvider(record);
+    var url = provider === 'qq'
+      ? '/api/qq/song/comments?id=' + encodeURIComponent(record.qqId || (/^\d+$/.test(String(record.id || '')) ? record.id : '')) + '&mid=' + encodeURIComponent(record.mid || record.songmid || record.id || '') + '&limit=16'
+      : '/api/song/comments?id=' + encodeURIComponent(record.id || '') + '&limit=16';
+    var data = await apiJson(url, { timeoutMs: 10000 });
+    var comments = (data && data.comments || []).filter(function(comment){
+      return comment && String(comment.content || '').trim().length >= 6;
+    }).map(function(comment){
+      return {
+        provider: provider,
+        songName: record.name || record.title || '最近播放',
+        content: String(comment.content || '').trim(),
+        nickname: comment.user && comment.user.nickname || '音乐用户',
+        likedCount: Number(comment.likedCount) || 0,
+      };
+    });
+    homeHotCommentState.items = shuffleHomeComments(comments).slice(0, 1);
+    homeHotCommentState.index = 0;
+    homeHotCommentState.loadedSignature = signature;
+  } catch (e) {
+    console.warn('[HomeHotComment]', record && (record.name || record.title), e);
+    homeHotCommentState.items = [];
+    homeHotCommentState.loadedSignature = signature;
+  } finally {
+    homeHotCommentState.loading = false;
+    renderHomeHotComment();
+    scheduleHomeHotCommentRotation();
+  }
+}
+function scheduleHomeHotCommentLoad(delay) {
+  if (!emptyHomeActive || homeHotCommentState.loadTimer) return;
+  homeHotCommentState.loadTimer = setTimeout(function(){
+    homeHotCommentState.loadTimer = null;
+    if (emptyHomeActive) loadHomeRecentHotComments();
+  }, delay || 520);
+}
 function fallbackHomeTiles() {
   return [
     { kind: 'login', title: '登录同步歌单', sub: '网易云 / QQ 音乐' },
@@ -15839,7 +16228,7 @@ function renderHomeDiscover() {
   var weatherKicker = document.getElementById('home-weather-kicker');
   var weatherMeta = document.getElementById('home-weather-meta');
   if (weatherTitle) weatherTitle.textContent = '我的音乐库';
-  if (weatherKicker) weatherKicker.textContent = 'Mineradio · Your Library';
+  if (weatherKicker) weatherKicker.textContent = weatherLocation + ' · Local Weather';
   if (sub) {
     if (loggedOutHome) sub.textContent = '登录后会把你的歌单、常听歌手和最近播放放在这里；也可以直接搜索或导入本地音乐。';
     else sub.textContent = '从你的歌单、最近播放和常听歌手开始，天气电台放在需要氛围的时候再开。';
@@ -15847,15 +16236,17 @@ function renderHomeDiscover() {
   if (weatherMeta) {
     var meta = [];
     if (weather) {
-      meta.push(weatherLocation);
-      meta.push(weather.label + ' · ' + Math.round(weather.temperature || 0) + '°');
-      meta.push('体感 ' + Math.round(weather.apparentTemperature || weather.temperature || 0) + '°');
-      if (isFinite(weather.humidity)) meta.push('湿度 ' + Math.round(weather.humidity) + '%');
+      var temperature = isFinite(Number(weather.temperature)) ? Math.round(Number(weather.temperature)) : '--';
+      var apparent = isFinite(Number(weather.apparentTemperature)) ? Math.round(Number(weather.apparentTemperature)) : temperature;
+      meta.push('<button class="home-weather-pill primary" type="button" onclick="locateWeatherRadio()" title="重新读取当地位置"><span class="home-weather-dot"></span>' + escHtml(weatherLocation) + '</button>');
+      meta.push('<span class="home-weather-pill primary">' + escHtml(weather.label || '当地天气') + ' · ' + temperature + '°</span>');
+      meta.push('<span class="home-weather-pill">体感 ' + apparent + '°</span>');
+      if (isFinite(Number(weather.humidity))) meta.push('<span class="home-weather-pill">湿度 ' + Math.round(Number(weather.humidity)) + '%</span>');
     } else {
-      meta.push(weatherLocation);
-      meta.push(homeWeatherRadioState.error ? '天气暂不可用' : '正在整理天气');
+      meta.push('<button class="home-weather-pill primary" type="button" onclick="locateWeatherRadio()" title="读取当地位置"><span class="home-weather-dot"></span>' + escHtml(weatherLocation) + '</button>');
+      meta.push('<span class="home-weather-pill">' + (homeWeatherRadioState.error ? '天气暂不可用 · 点击位置重试' : '正在读取当地天气') + '</span>');
     }
-    weatherMeta.innerHTML = meta.map(function(text){ return '<span class="home-weather-pill">' + escHtml(text) + '</span>'; }).join('');
+    weatherMeta.innerHTML = meta.join('');
   }
   var daily = homeDiscoverState.songs[0] || null;
   var cardSongB = homeDiscoverState.songs[1] || null;
@@ -15911,6 +16302,8 @@ function renderHomeDiscover() {
     setHomeArt('home-library-art', cardSongC && cardSongC.cover || summary.topSong && summary.topSong.cover || summary.recent && summary.recent.cover || podcastItem && podcastItem.cover, 280);
   }
   renderHomeTiles();
+  renderHomeHotComment();
+  scheduleHomeHotCommentLoad(620);
 }
 async function loadHomeDiscover(force) {
   if (homeDiscoverState.loading) return;
@@ -15953,6 +16346,9 @@ function homeWeatherRadioUrl(opts) {
   params.push('t=' + Date.now());
   return '/api/weather/radio?' + params.join('&');
 }
+function homeCurrentWeatherUrl(opts) {
+  return homeWeatherRadioUrl(opts).replace('/api/weather/radio?', '/api/weather/current?');
+}
 async function loadHomeWeatherRadio(force, opts) {
   opts = opts || {};
   if (homeWeatherRadioState.loading && homeWeatherLoadPromise && opts.lat == null && opts.lon == null && !opts.city) {
@@ -15966,9 +16362,24 @@ async function loadHomeWeatherRadio(force, opts) {
   renderHomeDiscover();
   var loadPromise = (async function(){
     try {
-      var data = await apiJson(homeWeatherRadioUrl(opts), { timeoutMs: 14000 });
+      try {
+        var currentData = await apiJson(homeCurrentWeatherUrl(opts), { timeoutMs: 9000 });
+        if (token !== homeWeatherToken) return homeWeatherRadioState;
+        if (currentData && currentData.weather) {
+          homeWeatherRadioState.weather = currentData.weather;
+          homeWeatherRadioState.updatedAt = Date.now();
+          if (currentData.weather.location && currentData.weather.location.name) {
+            homeWeatherRadioState.city = currentData.weather.location.name;
+            localStorage.setItem(HOME_WEATHER_CITY_KEY, homeWeatherRadioState.city);
+          }
+          renderHomeDiscover();
+        }
+      } catch (weatherError) {
+        console.warn('current weather failed:', weatherError);
+      }
+      var data = await apiJson(homeWeatherRadioUrl(opts), { timeoutMs: 32000 });
       if (token !== homeWeatherToken) return homeWeatherRadioState;
-      homeWeatherRadioState.weather = data && data.weather || null;
+      homeWeatherRadioState.weather = data && data.weather || homeWeatherRadioState.weather || null;
       homeWeatherRadioState.radio = data && data.radio || null;
       homeWeatherRadioState.loaded = true;
       homeWeatherRadioState.updatedAt = Date.now();
@@ -16002,7 +16413,12 @@ function scheduleHomeWeatherLoad(delay) {
   homeWeatherLoadTimer = setTimeout(function(){
     homeWeatherLoadTimer = null;
     if (!emptyHomeActive) return;
-    loadHomeWeatherRadio(false);
+    var lastLocatedAt = Number(localStorage.getItem(HOME_WEATHER_LOCATION_AT_KEY)) || 0;
+    if (homeWeatherLocationMode === 'auto' && Date.now() - lastLocatedAt > 6 * 60 * 60 * 1000) {
+      locateWeatherRadio({ silent: true });
+    } else {
+      loadHomeWeatherRadio(false);
+    }
   }, delay || 760);
 }
 function weatherRadioContext() {
@@ -16069,8 +16485,11 @@ if (emptyHomeStartEl) {
     startWeatherRadio();
   }, true);
 }
-function locateWeatherRadio() {
-  var previousWeatherCity = homeWeatherRadioState.city || '上海';
+function locateWeatherRadio(opts) {
+  opts = opts || {};
+  var previousWeatherCity = homeWeatherRadioState.city && homeWeatherRadioState.city !== '当前位置' ? homeWeatherRadioState.city : '上海';
+  homeWeatherLocationMode = 'auto';
+  localStorage.setItem(HOME_WEATHER_LOCATION_MODE_KEY, homeWeatherLocationMode);
   homeWeatherToken++;
   homeWeatherRadioState.loading = true;
   homeWeatherRadioState.loaded = false;
@@ -16091,8 +16510,9 @@ function locateWeatherRadio() {
       locationSettled = true;
       homeWeatherRadioState.city = loc.city || '当前位置';
       localStorage.setItem(HOME_WEATHER_CITY_KEY, homeWeatherRadioState.city);
+      localStorage.setItem(HOME_WEATHER_LOCATION_AT_KEY, String(Date.now()));
       renderHomeDiscover();
-      showToast('已用网络位置定位到 ' + (loc.city || '当前位置'));
+      if (!opts.silent) showToast('已用网络位置定位到 ' + (loc.city || '当前位置'));
       loadHomeWeatherRadio(true, {
         lat: loc.latitude,
         lon: loc.longitude,
@@ -16106,7 +16526,8 @@ function locateWeatherRadio() {
       homeWeatherRadioState.error = 'LOCATION_FAILED';
       homeWeatherRadioState.city = previousWeatherCity;
       renderHomeDiscover();
-      showToast('定位不可用，可以手动换城市');
+      if (!opts.silent) showToast('定位不可用，可以手动换城市');
+      loadHomeWeatherRadio(true, { city: previousWeatherCity });
     });
   }
   // Desktop users need a stable city label; browser coordinates can be stale or cityless.
@@ -16116,6 +16537,8 @@ function changeWeatherCity() {
   var city = window.prompt('输入城市名', homeWeatherRadioState.city || '上海');
   city = String(city || '').trim();
   if (!city) return;
+  homeWeatherLocationMode = 'manual';
+  localStorage.setItem(HOME_WEATHER_LOCATION_MODE_KEY, homeWeatherLocationMode);
   homeWeatherRadioState.city = city;
   localStorage.setItem(HOME_WEATHER_CITY_KEY, city);
   homeWeatherRadioState.loaded = false;
@@ -18700,6 +19123,9 @@ async function playQueueAt(idx, opts) {
   safeRenderQueuePanel('play-queue-at-switch', { scrollCurrent: miniQueueOpen });
   safePlaybackStep('shelf-preview-suppress', suppressShelfPreviewForPlaybackSwitch);
   pauseCurrentAudioForTrackSwitch();
+  externalPlaybackActive = false;
+  externalPlaybackLabel = '';
+  clearResolvedPlaybackQualityUi();
   var bmKey = safePlaybackStep('beatmap-key', function(){ return beatMapSongKey(song); }) || '';
   var podcastDjMode = !!safePlaybackStep('podcast-mode', function(){ return isPodcastSong(song); });
   safePlaybackStep('dj-mode', function(){ setDjModeActive(podcastDjMode, song); });
@@ -18767,12 +19193,14 @@ async function playQueueAt(idx, opts) {
       handlePlaybackUnavailable(song, data);
       return;
     }
+    updateResolvedPlaybackQualityUi(data, playbackProvider, requestedQuality);
     var resolvedQualityText = playbackResolvedQualityText(data);
     if (!isQQPlayback && playbackQualityWasDowngraded(requestedQuality, data.level)) {
-      showSourceFallbackNotice('网易云音质自动降级', '请求 ' + playbackQualityLabel(requestedQuality) + '，实际播放 ' + resolvedQualityText + '。');
+      showSourceFallbackNotice(playbackProviderLabel(song) + '音质自动降级', '请求 ' + playbackQualityLabel(requestedQuality) + '，实际播放 ' + resolvedQualityText + '。');
     } else if (opts.qualitySwitch) {
       showSourceFallbackNotice('音质已切换', '实际播放: ' + resolvedQualityText + '。');
     }
+    if (await openResolvedSongExternally(song, data, token)) return;
     if (data.trial) {
       var txt;
       if (data.loggedIn && data.vipLevel === 'svip') txt = '此歌曲需要单曲、专辑购买或更高权限';
@@ -18955,6 +19383,10 @@ async function playAudio(opts) {
 }
 async function togglePlay() {
   if (playToggleBusy) return;
+  if (externalPlaybackActive) {
+    showToast('当前由' + (externalPlaybackLabel || '外部播放器') + '播放，请在外部软件中控制');
+    return;
+  }
   playToggleBusy = true;
   try {
     forcePlaybackControlsInteractive();
@@ -20215,6 +20647,12 @@ function setProgressVisual(percent) {
   if (thumb) thumb.style.left = percent + '%';
 }
 function updatePlaybackProgressUi() {
+  if (externalPlaybackActive) {
+    setProgressVisual(0);
+    var externalTimeDisplay = document.getElementById('time-display');
+    if (externalTimeDisplay) externalTimeDisplay.textContent = '外部播放';
+    return;
+  }
   var durationSec = getPlaybackDurationSeconds();
   var currentSec = getPlaybackCurrentSeconds();
   if (durationSec > 0 && currentSec > durationSec) currentSec = durationSec;
@@ -20292,7 +20730,49 @@ setInterval(function(){
 //  文件拖放
 // ============================================================
 document.getElementById('file-input').addEventListener('change', function(e){ handleFiles(e.target.files); e.target.value = ''; });
-function handleFiles(files) {
+async function openLocalFileExternally(audioFile, localTitle) {
+  if (!audioFile || !externalPlaybackPreferred() || !window.desktopWindow || typeof window.desktopWindow.getPathForFile !== 'function') return false;
+  var nativePath = '';
+  try { nativePath = window.desktopWindow.getPathForFile(audioFile) || ''; } catch (e) {}
+  if (!nativePath) return false;
+  showToast('正在打开 ' + externalPlayerDisplayLabel(externalPlaybackPreference.mode));
+  try {
+    var result = await window.desktopWindow.openAudioExternally({
+      mode: externalPlaybackPreference.mode,
+      customPath: externalPlaybackPreference.customPath || '',
+      localFilePath: nativePath,
+      title: localTitle || audioFile.name || '本地音乐',
+      artist: '本地文件',
+    });
+    if (!result || !result.ok) {
+      showSourceFallbackNotice('外部播放器打开失败', '已自动改用 Mineradio 内置播放器。');
+      return false;
+    }
+    currentIdx = -1;
+    currentLocalSong = { type: 'local', name: localTitle || audioFile.name || '本地音乐', artist: '本地文件', localPath: nativePath };
+    document.getElementById('hint').classList.add('hidden');
+    document.getElementById('thumb-title').textContent = currentLocalSong.name;
+    document.getElementById('thumb-artist').textContent = '本地文件';
+    document.getElementById('thumb-wrap').classList.add('visible');
+    updateControlTrackInfo(currentLocalSong);
+    clearResolvedPlaybackQualityUi();
+    externalPlaybackActive = true;
+    externalPlaybackLabel = result.label || externalPlayerDisplayLabel(externalPlaybackPreference.mode);
+    playing = false;
+    setPlayIcon(false);
+    updatePlaybackProgressUi();
+    var bottom = document.getElementById('bottom-bar');
+    if (bottom) bottom.classList.add('visible');
+    forcePlaybackControlsInteractive();
+    showSourceFallbackNotice('已交给' + externalPlaybackLabel, '暂停、进度和音量请在外部播放器中控制。');
+    return true;
+  } catch (e) {
+    console.warn('[ExternalLocalPlayback]', e);
+    showSourceFallbackNotice('外部播放器打开失败', '已自动改用 Mineradio 内置播放器。');
+    return false;
+  }
+}
+async function handleFiles(files) {
   var audioFile = null, imgFile = null;
   for (var i = 0; i < files.length; i++) {
     var f = files[i];
@@ -20301,8 +20781,11 @@ function handleFiles(files) {
   }
   if (audioFile) {
     finalizeListenSession(false);
-    var url = URL.createObjectURL(audioFile);
     var localTitle = audioFile.name.replace(/\.[^.]+$/, '');
+    if (await openLocalFileExternally(audioFile, localTitle)) return;
+    externalPlaybackActive = false;
+    externalPlaybackLabel = '';
+    var url = URL.createObjectURL(audioFile);
     trackSwitchToken++;
     var token = trackSwitchToken;
     var firstVisualPlay = !firstPlayDone;
