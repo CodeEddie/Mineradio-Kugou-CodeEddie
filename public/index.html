@@ -1181,19 +1181,6 @@ body.desktop-shell.diy-mode #bottom-bar.stage-mode{left:50%;width:min(1080px,cal
 .preset-card[data-preset="6"].active .pc-icon{color:#3257f7!important;text-shadow:0 0 12px rgba(50,87,247,.44)}
 .preset-card .pc-bg{position:absolute;inset:0;opacity:.35;pointer-events:none}
 @keyframes preset-card-pulse{0%{opacity:0;transform:scale(.6) rotate(0deg)}35%{opacity:1}100%{opacity:0;transform:scale(1.25) rotate(12deg)}}
-.wallpaper-template-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:0 0 11px}
-.wallpaper-card{position:relative;min-height:76px;overflow:hidden;padding:10px;border:1px solid rgba(255,255,255,.075);border-radius:11px;background:rgba(255,255,255,.025);color:rgba(255,255,255,.72);cursor:pointer;text-align:left;font-family:inherit;transition:border-color .2s,background .2s,transform .2s}
-.wallpaper-card:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.05)}
-.wallpaper-card.active{border-color:rgba(var(--fc-accent-rgb),.38);background:rgba(var(--fc-accent-rgb),.085);color:#fff;box-shadow:0 10px 28px rgba(var(--fc-accent-rgb),.07)}
-.wallpaper-card::before{content:'';position:absolute;inset:0;opacity:.78;pointer-events:none}
-.wallpaper-card[data-wallpaper="aurora"]::before{background:radial-gradient(circle at 24% 76%,rgba(80,236,215,.34),transparent 38%),linear-gradient(145deg,rgba(24,34,52,.28),rgba(8,11,18,.88))}
-.wallpaper-card[data-wallpaper="halo"]::before{background:radial-gradient(circle at 50% 42%,transparent 13%,rgba(244,210,138,.28) 15%,transparent 32%),linear-gradient(160deg,rgba(14,18,28,.3),rgba(5,7,12,.92))}
-.wallpaper-card[data-wallpaper="vinyl"]::before{background:repeating-radial-gradient(circle at 70% 42%,rgba(255,255,255,.10) 0 1px,transparent 2px 7px),linear-gradient(145deg,rgba(24,28,34,.32),rgba(4,5,8,.94))}
-.wallpaper-card[data-wallpaper="constellation"]::before{background:radial-gradient(circle at 20% 28%,rgba(255,255,255,.7) 0 1px,transparent 2px),radial-gradient(circle at 76% 62%,rgba(126,205,255,.72) 0 1px,transparent 2px),linear-gradient(145deg,rgba(13,28,47,.38),rgba(4,6,12,.94));background-size:auto,auto,auto}
-.wallpaper-card strong,.wallpaper-card small{position:relative;z-index:1;display:block}
-.wallpaper-card strong{font-size:11.5px;font-weight:760;letter-spacing:.35px}
-.wallpaper-card small{margin-top:4px;font-size:9.5px;line-height:1.35;color:rgba(255,255,255,.42)}
-.wallpaper-card.active small{color:rgba(255,255,255,.62)}
 .user-archive-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:0 0 12px}
 .user-archive-toolbar{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px;padding:9px;border-radius:12px;border:1px dashed rgba(255,255,255,.10);background:rgba(255,255,255,.018)}
 .user-archive-note{font-size:10.5px;line-height:1.45;color:rgba(255,255,255,.42)}
@@ -1478,7 +1465,7 @@ html.control-glass-svg-ok #search-box,html.control-glass-svg-ok #search-results,
   backdrop-filter:var(--saved-panel-glass-svg-filter)!important;
   -webkit-backdrop-filter:var(--saved-panel-glass-svg-filter)!important;
 }
-.icon-btn,#fx-fab,.user-capsule-hide-btn,.fx-mini-btn,.fx-toggle,.fx-seg button,.panel-tab,.preset-card,.wallpaper-card,.lyric-color-row,.fx-slider,.fx-fold,.quality-option,.modal-btn,.visual-guide-actions button,.home-chip,.pl-card,.queue-item,.mini-queue-item,.pl-detail-row,.pl-detail-play,.local-beat-tab,.search-history-chip,.search-result .add-btn,.song-action-btn,.qi-act button,.mini-queue-remove{
+.icon-btn,#fx-fab,.user-capsule-hide-btn,.fx-mini-btn,.fx-toggle,.fx-seg button,.panel-tab,.preset-card,.lyric-color-row,.fx-slider,.fx-fold,.quality-option,.modal-btn,.visual-guide-actions button,.home-chip,.pl-card,.queue-item,.mini-queue-item,.pl-detail-row,.pl-detail-play,.local-beat-tab,.search-history-chip,.search-result .add-btn,.song-action-btn,.qi-act button,.mini-queue-remove{
   background:var(--saved-button-glass-bg)!important;
   border-color:transparent!important;
   box-shadow:var(--saved-button-glass-shadow)!important;
@@ -1656,7 +1643,7 @@ html.control-glass-svg-ok #search-box,html.control-glass-svg-ok #search-results,
   backdrop-filter:var(--panel-glass-filter)!important;
   -webkit-backdrop-filter:var(--panel-glass-filter)!important;
 }
-.icon-btn:not(.ctrl-btn),#fx-fab,.user-capsule-hide-btn,.fx-mini-btn,.fx-toggle,.fx-seg button,.panel-tab,.preset-card,.wallpaper-card,.lyric-color-row,.fx-slider,.fx-fold,.quality-option,.modal-btn,.visual-guide-actions button,.home-chip,.local-beat-tab,.search-history-chip,.search-result .add-btn,.song-action-btn{
+.icon-btn:not(.ctrl-btn),#fx-fab,.user-capsule-hide-btn,.fx-mini-btn,.fx-toggle,.fx-seg button,.panel-tab,.preset-card,.lyric-color-row,.fx-slider,.fx-fold,.quality-option,.modal-btn,.visual-guide-actions button,.home-chip,.local-beat-tab,.search-history-chip,.search-result .add-btn,.song-action-btn{
   background:var(--panel-button-bg)!important;
   border-color:rgba(255,255,255,.070)!important;
   backdrop-filter:blur(16px) saturate(1.18)!important;
@@ -1758,7 +1745,7 @@ html.control-glass-svg-ok #search-results{
   backdrop-filter:blur(22px) saturate(1.16)!important;
   -webkit-backdrop-filter:blur(22px) saturate(1.16)!important;
 }
-.fx-mini-btn,.fx-toggle,.fx-seg button,.panel-tab,.preset-card,.wallpaper-card,.lyric-color-row,.quality-option,.modal-btn,
+.fx-mini-btn,.fx-toggle,.fx-seg button,.panel-tab,.preset-card,.lyric-color-row,.quality-option,.modal-btn,
 .search-mode-tabs button,.visual-guide-actions button,.home-chip,.pl-card,.queue-item,.mini-queue-item,
 .pl-detail-row,.pl-detail-play,.local-beat-tab,.search-history-chip,.search-result .add-btn,
 .song-action-btn,.qi-act button,.mini-queue-remove{
@@ -2390,15 +2377,9 @@ html.control-glass-svg-ok #visual-guide-btn:hover{
         <div class="fx-toggle" id="t-desktopLyricsClickThrough" onclick="toggleFx('desktopLyricsClickThrough')" title="锁定后防误触；鼠标移到桌面歌词上按中键可锁定/解锁"><span>桌面歌词锁定</span><span class="dot"></span></div>
         <div class="fx-toggle" id="t-desktopLyricsCinema" onclick="toggleFx('desktopLyricsCinema')" title="桌面歌词绑定鼓点电影震动，基础漂浮始终保留"><span>桌面歌词电影震动</span><span class="dot"></span></div>
         <div class="fx-toggle" id="t-desktopLyricsHighlight" onclick="toggleFx('desktopLyricsHighlight')" title="桌面歌词按播放进度高亮"><span>桌面歌词高亮跟随</span><span class="dot"></span></div>
-        <div class="fx-toggle" id="t-wallpaperMode" onclick="toggleFx('wallpaperMode')" title="将动态视觉挂载到 Windows 桌面壁纸层"><span>动态壁纸</span><span class="dot"></span></div>
+        <div class="fx-toggle dev-locked" id="t-wallpaperMode" onclick="toggleFx('wallpaperMode')" title="开发中，暂不可用"><span>系统壁纸模式<em class="fx-dev-badge">开发中</em></span><span class="dot"></span></div>
       </div>
-      <div class="fx-section-label">桌面 / Wallpaper Library</div>
-      <div class="wallpaper-template-grid" id="wallpaper-template-grid">
-        <button class="wallpaper-card" type="button" data-wallpaper="aurora" onclick="setWallpaperTemplate('aurora')"><strong>极光脉冲</strong><small>柔和色带 · 音律漂移</small></button>
-        <button class="wallpaper-card" type="button" data-wallpaper="halo" onclick="setWallpaperTemplate('halo')"><strong>日蚀光环</strong><small>封面光晕 · 深黑留白</small></button>
-        <button class="wallpaper-card" type="button" data-wallpaper="vinyl" onclick="setWallpaperTemplate('vinyl')"><strong>黑胶唱片</strong><small>唱片纹理 · 缓慢旋转</small></button>
-        <button class="wallpaper-card" type="button" data-wallpaper="constellation" onclick="setWallpaperTemplate('constellation')"><strong>星图连线</strong><small>低密星点 · 流动轨迹</small></button>
-      </div>
+      <div class="fx-section-label">桌面歌词</div>
       <div class="fx-slider"><label>桌面歌词大小</label><input id="fx-desktoplyricssize" type="range" min="0.72" max="1.55" step="0.01"><output></output></div>
       <div class="fx-slider"><label>桌面歌词透明</label><input id="fx-desktoplyricsopacity" type="range" min="0.28" max="1" step="0.01"><output></output></div>
       <div class="fx-slider"><label>桌面歌词高度</label><input id="fx-desktoplyricsy" type="range" min="0.08" max="0.92" step="0.01"><output></output></div>
@@ -2410,7 +2391,7 @@ html.control-glass-svg-ok #visual-guide-btn:hover{
         <button data-desktop-lyrics-fps="120">120</button>
         <button data-desktop-lyrics-fps="0">无上限</button>
       </div>
-      <div class="fx-slider"><label>壁纸透明度</label><input id="fx-wallpaperopacity" type="range" min="0.35" max="1" step="0.01"><output></output></div>
+      <div class="fx-slider dev-locked"><label>系统壁纸透明度</label><input id="fx-wallpaperopacity" type="range" min="0.35" max="1" step="0.01" disabled><output></output></div>
     </div>
   </div>
 
@@ -2970,6 +2951,7 @@ var CUSTOM_LYRIC_STORE_KEY = 'mineradio-custom-lyrics-v1';
 var CUSTOM_LYRIC_PREF_STORE_KEY = 'mineradio-custom-lyric-prefs-v1';
 var LYRIC_LAYOUT_STORE_KEY = 'mineradio-lyric-layout-v1';
 var VISUAL_PRESET_SCHEMA = 'skull-preset-v2';
+var VISUAL_PRESET_MAX = 9;
 var PLAYBACK_QUALITY_STORE_KEY = 'mineradio-playback-quality-v1';
 var EXTERNAL_PLAYER_STORE_KEY = 'mineradio-external-player-v1';
 var UPLOAD_TIP_STORE_KEY = 'mineradio-upload-tip-seen';
@@ -3480,7 +3462,7 @@ function maybeAnnounceDjMode() {
 
 // fx 状态: 预设 + 主滑块 + 开关 + 三态
 var fxDefaults = {
-  preset: 0,            // 0=emily cover, 1=tunnel, 2=orbit, 3=void, 4=vinyl, 5=wallpaper, 6=skull
+  preset: 0,            // 0=emily, 1=tunnel, 2=orbit, 3=void, 4=vinyl, 5=galaxy, 6=skull, 7-9=internal wallpaper visuals
   intensity: 0.85,
   cinemaShake: 0.5,
   depth: 1.0,
@@ -3528,7 +3510,6 @@ var fxDefaults = {
   desktopLyricsHighlight: false,
   desktopLyricsFps: 60,
   wallpaperMode: false,
-  wallpaperTemplate: 'aurora',
   wallpaperOpacity: 1,
   floatLayer: false, cinema: true, edge: false, aiDepth: false, bloom: false, lyricGlow: true,
   lyricGlowBeat: true,
@@ -3620,7 +3601,6 @@ var PACKAGED_DEFAULT_FX_SNAPSHOT = Object.freeze({
   desktopLyricsHighlight: false,
   desktopLyricsFps: 60,
   wallpaperMode: false,
-  wallpaperTemplate: 'aurora',
   wallpaperOpacity: 1,
   performanceBackground: 'auto',
   performanceQuality: 'high',
@@ -3649,22 +3629,32 @@ function clonePackagedDefaultFxSnapshot() {
 function packagedDefaultLyricLayoutRaw() {
   return Object.assign({ desktopLyricsSchema: 'desktop-lyrics-v3' }, clonePackagedDefaultFxSnapshot());
 }
-var DEVELOPMENT_LOCKED_FX = {};
-function normalizeWallpaperTemplate(value) {
-  value = String(value || 'aurora').toLowerCase();
-  return /^(aurora|halo|vinyl|constellation)$/.test(value) ? value : 'aurora';
-}
+var DEVELOPMENT_LOCKED_FX = {
+  wallpaperMode: true
+};
 function isDevelopmentLockedFx(key) {
   return !!DEVELOPMENT_LOCKED_FX[key];
 }
 function normalizeDevelopmentLockedFxState() {
-  return;
+  if (!fx) return;
+  fx.wallpaperMode = false;
+}
+function isInternalWallpaperPreset(value) {
+  value = Number(value);
+  return value === 5 || (value >= 7 && value <= VISUAL_PRESET_MAX);
+}
+function shaderPresetFor(value) {
+  return isInternalWallpaperPreset(value) ? 5 : Number(value) || 0;
+}
+function wallpaperVariantFor(value) {
+  value = Number(value);
+  return value >= 7 && value <= VISUAL_PRESET_MAX ? value - 6 : 0;
 }
 function readSavedPlaybackVisualPreset() {
   try {
     var raw = JSON.parse(localStorage.getItem(LYRIC_LAYOUT_STORE_KEY) || '{}') || {};
     if (!Object.prototype.hasOwnProperty.call(raw, 'preset')) return fxDefaults.preset;
-    var savedPreset = clampRange(Number(raw.preset) || 0, 0, 6);
+    var savedPreset = clampRange(Number(raw.preset) || 0, 0, VISUAL_PRESET_MAX);
     if (savedPreset === 3 && raw.visualPresetSchema !== VISUAL_PRESET_SCHEMA) savedPreset = 5;
     return savedPreset;
   } catch (e) {
@@ -5386,13 +5376,13 @@ function updateCamera() {
 // 焦点跟拍 (hover 0.5s 后镜头移到目标)
 var focusHover = { wantType: null, pendingTimer: null, exitTimer: null };
 function shouldUseWallpaperSafeShelfCamera() {
-  return !!(fx && Number(fx.preset) === 5);
+  return !!(fx && isInternalWallpaperPreset(fx.preset));
 }
 function shouldUseSkullSafeShelfCamera() {
   return !!(fx && Number(fx.preset) === SKULL_PRESET_INDEX);
 }
 function shouldUseWallpaperLyricCameraLock() {
-  return !!(fx && Number(fx.preset) === 5 && fx.lyricCameraLock);
+  return !!(fx && isInternalWallpaperPreset(fx.preset) && fx.lyricCameraLock);
 }
 function requestStageLyricCameraSnap(frames) {
   if (typeof stageLyrics === 'undefined' || !stageLyrics) return;
@@ -6110,6 +6100,7 @@ var uniforms = {
   uBurstAmt:   { value: 0 },          // 通用预设切换脉冲 0..1
   uVinylSpin:  { value: 0 },
   uPreset:     { value: 0 },
+  uWallpaperVariant:{ value: 0 },
   uIntensity:  { value: 0.85 },
   uDepth:      { value: 1.0 },
   uPointScale: { value: 1.0 },
@@ -6153,7 +6144,7 @@ applyRendererPowerMode();
 var vs = `
 precision highp float;
 uniform float uTime, uBass, uMid, uTreble, uBeat, uEnergy, uBurstAmt;
-uniform float uPreset, uIntensity, uDepth, uPointScale, uSpeed, uTwist;
+uniform float uPreset, uWallpaperVariant, uIntensity, uDepth, uPointScale, uSpeed, uTwist;
 uniform float uVinylSpin;
 uniform float uColorBoost, uScatter, uCoverRes, uBgFade;
 uniform float uHasCover, uHasDepth, uEdgeEnabled, uAiBoost;
@@ -6484,6 +6475,41 @@ void main(){
       vAlpha = dust * (0.16 + twinkle * 0.46 + highGlow * 0.025 + bassGlow * 0.018) * (1.0 - q * 0.06);
       vColor = mix(coverColor, vec3(0.92, 0.97, 1.0), 0.62 + twinkle * 0.14) * (0.72 + twinkle * 0.62 + bassGlow * 0.025);
       maxRippleAmp = max(maxRippleAmp, twinkle * highGlow * 0.055 + dust * bassGlow * 0.030);
+    }
+
+    if (uWallpaperVariant > 0.5 && uWallpaperVariant < 1.5) {
+      float auroraWave = sin(pos.x * 0.095 + t * 0.12 + aRand * 2.4);
+      pos.y = pos.y * 0.72 + auroraWave * (1.25 + midGlow * 1.8);
+      pos.z = pos.z * 0.72 + cos(pos.x * 0.072 - t * 0.08 + aRand) * 2.2;
+      vec3 auroraCold = mix(vec3(0.18, 0.88, 0.76), vec3(0.54, 0.46, 1.0), aUv.y);
+      vColor = mix(vColor, mix(coverColor, auroraCold, 0.72), 0.70);
+      vAlpha *= 0.86 + highGlow * 0.18;
+      maxRippleAmp = max(maxRippleAmp, abs(auroraWave) * (0.08 + midGlow * 0.12));
+    } else if (uWallpaperVariant > 1.5 && uWallpaperVariant < 2.5) {
+      float haloAngle = aUv.x * PI * 2.0 + t * 0.035;
+      float haloLayer = floor(aUv.y * 7.0);
+      float haloSeed = hash11(haloLayer * 17.7 + aRand * 5.0);
+      float haloRadius = 1.55 + haloLayer * 0.42 + (aUv.y * 7.0 - haloLayer) * 0.34;
+      haloRadius += sin(haloAngle * (2.0 + mod(haloLayer, 3.0)) - t * 0.18) * (0.05 + midGlow * 0.10);
+      haloRadius *= 1.0 + bassGlow * 0.16;
+      pos = vec3(cos(haloAngle) * haloRadius, sin(haloAngle) * haloRadius * 0.74, (haloSeed - 0.5) * 4.8);
+      float haloSpark = pow(0.5 + 0.5 * sin(haloAngle * 17.0 + t * 0.42 + aRand * 9.0), 7.0);
+      vec3 haloGold = mix(vec3(0.96, 0.72, 0.32), vec3(0.52, 0.78, 1.0), haloSeed);
+      vColor = mix(coverColor, haloGold, 0.68 + haloSpark * 0.18);
+      vAlpha = 0.18 + haloSpark * 0.72 + bassGlow * 0.20;
+      maxRippleAmp = max(maxRippleAmp, bassGlow * 0.34 + haloSpark * highGlow * 0.28);
+    } else if (uWallpaperVariant > 2.5) {
+      float starSeed = hash11(aRand * 991.0 + floor(aUv.y * 190.0));
+      float starX = hash11(aRand * 431.0 + 2.0) - 0.5;
+      float starY = hash11(aRand * 733.0 + 7.0) - 0.5;
+      float starDepth = hash11(aRand * 281.0 + 11.0);
+      float starDrift = fract(starX + 0.5 + t * (0.0012 + starDepth * 0.0024)) - 0.5;
+      pos = vec3(starDrift * 28.0, starY * 16.0, mix(-18.0, 8.0, starDepth));
+      float starTwinkle = pow(0.5 + 0.5 * sin(t * (0.32 + starSeed * 0.78) + aRand * 21.0), 9.0);
+      float starGate = smoothstep(0.58, 0.96, starSeed);
+      vColor = mix(coverColor, vec3(0.78, 0.90, 1.0), 0.72 + starTwinkle * 0.18);
+      vAlpha = starGate * (0.20 + starTwinkle * 0.88 + highGlow * 0.14);
+      maxRippleAmp = max(maxRippleAmp, starGate * (starTwinkle * 0.32 + highGlow * 0.16));
     }
 
     if (transition > 0.001) {
@@ -7830,7 +7856,7 @@ function readSavedLyricLayout() {
   try {
     var savedLayoutRaw = localStorage.getItem(LYRIC_LAYOUT_STORE_KEY);
     var raw = savedLayoutRaw ? (JSON.parse(savedLayoutRaw) || {}) : packagedDefaultLyricLayoutRaw();
-    var savedPreset = clampRange(Number(raw.preset) || 0, 0, 6);
+    var savedPreset = clampRange(Number(raw.preset) || 0, 0, VISUAL_PRESET_MAX);
     if (savedPreset === 3 && raw.visualPresetSchema !== VISUAL_PRESET_SCHEMA) {
       savedPreset = 5;
     }
@@ -7909,8 +7935,7 @@ function readSavedLyricLayout() {
       performanceBackground: normalizePerformanceBackgroundMode(raw.performanceBackground, raw.liveBackgroundKeep === true),
       performanceQuality: normalizePerformanceQuality(raw.performanceQuality),
       liveBackgroundKeep: normalizePerformanceBackgroundMode(raw.performanceBackground, raw.liveBackgroundKeep === true) === 'keep',
-      wallpaperMode: raw.wallpaperMode === true,
-      wallpaperTemplate: normalizeWallpaperTemplate(raw.wallpaperTemplate),
+      wallpaperMode: false,
       wallpaperOpacity: clampRange(raw.wallpaperOpacity == null ? fxDefaults.wallpaperOpacity : Number(raw.wallpaperOpacity), 0.35, 1),
       coverResolution: normalizeCoverResolution(raw.coverResolution),
       shelf: /^(off|side|stage)$/.test(String(raw.shelf || '')) ? raw.shelf : fxDefaults.shelf,
@@ -8002,8 +8027,7 @@ function saveLyricLayout() {
       performanceBackground: normalizePerformanceBackgroundMode(fx.performanceBackground, fx.liveBackgroundKeep === true),
       performanceQuality: normalizePerformanceQuality(fx.performanceQuality),
       liveBackgroundKeep: normalizePerformanceBackgroundMode(fx.performanceBackground, fx.liveBackgroundKeep === true) === 'keep',
-      wallpaperMode: !!fx.wallpaperMode,
-      wallpaperTemplate: normalizeWallpaperTemplate(fx.wallpaperTemplate),
+      wallpaperMode: false,
       wallpaperOpacity: clampRange(fx.wallpaperOpacity == null ? fxDefaults.wallpaperOpacity : Number(fx.wallpaperOpacity), 0.35, 1),
       coverResolution: normalizeCoverResolution(fx.coverResolution),
       shelf: /^(off|side|stage)$/.test(String(fx.shelf || '')) ? fx.shelf : fxDefaults.shelf,
@@ -21339,6 +21363,9 @@ var presetMeta = [
   { name: '唱片', desc: '唱片 · 圆形封面' },
   { name: '星河', desc: '壁纸粒子 · 音乐律动' },
   { name: '安魂', desc: '骷髅·YUI7W', descHtml: '骷髅·<span class="pc-yui7w">YUI7W</span>' },
+  { name: '极光', desc: '流光丝带 · 音色漂移' },
+  { name: '日蚀', desc: '封面光环 · 低频呼吸' },
+  { name: '星图', desc: '深空星点 · 高频闪烁' },
 ];
 var presetIcons = [
   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 14c3-2 5-2 8 0s5 2 8 0M3 10c3-2 5-2 8 0s5 2 8 0M3 18c3-2 5-2 8 0s5 2 8 0"/></svg>',
@@ -21348,8 +21375,11 @@ var presetIcons = [
   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.4"/><path d="M16.5 5.2c2.1.9 3.4 2.4 4 4.5"/><path d="M18.8 3.2l1.5 4.8"/></svg>',
   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 15c2.2-4.4 4.4-4.4 6.6 0s4.4 4.4 6.6 0S20.6 10.6 23 15"/><path d="M3 9c2.2 2.2 4.4 2.2 6.6 0s4.4-2.2 6.6 0S20.6 11.2 23 9"/><circle cx="12" cy="12" r="1.7" fill="currentColor"/></svg>',
   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.2h4v6.2h4.2v3.8H14v7.6h-4v-7.6H5.8V9.4H10z"/></svg>',
+  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M2.5 15.5c3-6 5.5-6 8.5 0s5.5 6 10.5-2"/><path d="M3 10.5c3.5-3.8 6-3.4 8.6 1.1s5.2 4.2 9.4-.8"/></svg>',
+  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="7.5"/><circle cx="12" cy="12" r="3.6" fill="currentColor" stroke="none"/><path d="M19.2 9.8c1.5 1.4 1.5 3 0 4.4"/></svg>',
+  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="5" cy="7" r="1" fill="currentColor"/><circle cx="12" cy="4.5" r="1" fill="currentColor"/><circle cx="19" cy="9" r="1" fill="currentColor"/><circle cx="9" cy="17.5" r="1" fill="currentColor"/><circle cx="18" cy="19" r="1" fill="currentColor"/><path d="M5.8 7l5.2-2.1 7.1 3.7M18.5 9.8l-.4 8.1M17.1 18.8l-7.1-1"/></svg>',
 ];
-var presetDisplayOrder = [0, 6, 5, 4, 2, 1, 3];
+var presetDisplayOrder = [0, 6, 5, 7, 8, 9, 4, 2, 1, 3];
 var lyricColorPresets = [
   { name:'雾蓝', color:'#a9b8c8' },
   { name:'银蓝', color:'#9db8cf' },
@@ -21455,8 +21485,7 @@ function normalizeFxArchiveSnapshot(raw) {
     desktopLyricsCinema: raw.desktopLyricsCinema !== false,
     desktopLyricsHighlight: raw.desktopLyricsHighlight === true,
     desktopLyricsFps: normalizeDesktopLyricsFps(Object.prototype.hasOwnProperty.call(raw, 'desktopLyricsFps') ? raw.desktopLyricsFps : fxDefaults.desktopLyricsFps),
-    wallpaperMode: raw.wallpaperMode === true,
-    wallpaperTemplate: normalizeWallpaperTemplate(raw.wallpaperTemplate),
+    wallpaperMode: false,
     wallpaperOpacity: archiveNumber(raw, 'wallpaperOpacity', fxDefaults.wallpaperOpacity, 0.35, 1),
     performanceBackground: normalizePerformanceBackgroundMode(raw.performanceBackground, raw.liveBackgroundKeep === true),
     performanceQuality: normalizePerformanceQuality(raw.performanceQuality),
@@ -22480,11 +22509,11 @@ function refreshPresetGrid() {
 function triggerPresetParticleTransition(fromPreset, toPreset) {
   presetTransition.active = true;
   presetTransition.start = uniforms.uTime.value;
-  presetTransition.duration = toPreset === 5 ? 0.30 : 0.24;
+  presetTransition.duration = isInternalWallpaperPreset(toPreset) ? 0.30 : 0.24;
   presetTransition.from = fromPreset;
   presetTransition.to = toPreset;
   var newVisual = toPreset >= 4;
-  var wallpaperFlow = toPreset === 5;
+  var wallpaperFlow = isInternalWallpaperPreset(toPreset);
   uniforms.uScatter.value = Math.max(uniforms.uScatter.value, fx.scatter + (newVisual ? (wallpaperFlow ? 0.008 : 0.024) : 0.12));
   uniforms.uBurstAmt.value = Math.max(uniforms.uBurstAmt.value, wallpaperFlow ? 0.05 : 0.15);
   camPunch = Math.max(camPunch, wallpaperFlow ? 0.04 : 0.12);
@@ -22505,7 +22534,7 @@ function tickPresetTransition() {
   var t = Math.max(0, Math.min(1, raw));
   var wave = Math.sin(t * Math.PI);
   var newVisual = presetTransition.to >= 4;
-  var wallpaperFlow = presetTransition.to === 5;
+  var wallpaperFlow = isInternalWallpaperPreset(presetTransition.to);
   uniforms.uScatter.value = Math.max(uniforms.uScatter.value, fx.scatter + wave * (newVisual ? (wallpaperFlow ? 0.008 : 0.026) : 0.16));
   uniforms.uBurstAmt.value = Math.max(uniforms.uBurstAmt.value, wave * (wallpaperFlow ? 0.045 : (newVisual ? 0.12 : 0.15)));
   uniforms.uPointScale.value = fx.point * (1 + wave * (wallpaperFlow ? 0.016 : 0.048));
@@ -22522,7 +22551,8 @@ function setPreset(p, opts) {
   fx.preset = p;
   if (changed && prev === SKULL_PRESET_INDEX && p !== SKULL_PRESET_INDEX) clearSkullPresetResidue();
   if (p === SKULL_PRESET_INDEX) loadSkullParticleAsset();
-  uniforms.uPreset.value = p;
+  uniforms.uPreset.value = shaderPresetFor(p);
+  uniforms.uWallpaperVariant.value = wallpaperVariantFor(p);
   refreshPresetGrid();
   if (changed && !opts.skipTransition) triggerPresetParticleTransition(prev, p);
   // 每个预设对应的相机基线 (改 userOrbit)
@@ -22531,10 +22561,10 @@ function setPreset(p, opts) {
     else if (p === 2) { orbit.userRadius = 7.0; orbit.userPhi = 0.15; orbit.userTheta = 0.0; orbit.baselineRadius = 7.0; orbit.baselinePhi = 0.15; }
     else if (p === 3) { orbit.userRadius = 8.0; orbit.userPhi = 0.05; orbit.userTheta = 0.0; orbit.baselineRadius = 8.0; orbit.baselinePhi = 0.05; }
     else if (p === 4) { orbit.userRadius = 6.5; orbit.userPhi = 0.04; orbit.userTheta = 0.0; orbit.baselineRadius = 6.5; orbit.baselinePhi = 0.04; }
-    else if (p === 5) { orbit.userRadius = 9.4; orbit.userPhi = 0.34; orbit.userTheta = -0.52; orbit.baselineRadius = 9.4; orbit.baselinePhi = 0.34; }
+    else if (isInternalWallpaperPreset(p)) { orbit.userRadius = 9.4; orbit.userPhi = 0.34; orbit.userTheta = -0.52; orbit.baselineRadius = 9.4; orbit.baselinePhi = 0.34; }
     else if (p === 6) { orbit.userRadius = 7.4; orbit.userPhi = 0.10; orbit.userTheta = 0.18; orbit.baselineRadius = 7.4; orbit.baselinePhi = 0.10; }
     else              { orbit.userRadius = 6.6; orbit.userPhi = 0.08; orbit.userTheta = 0.0; orbit.baselineRadius = 6.6; orbit.baselinePhi = 0.08; }
-    orbit.baselineTheta = p === 5 ? -0.52 : (p === 6 ? 0.18 : 0.0);
+    orbit.baselineTheta = isInternalWallpaperPreset(p) ? -0.52 : (p === 6 ? 0.18 : 0.0);
   }
   if (changed && !opts.silent) showToast('视觉预设: ' + presetMeta[p].name);
   var shouldCommitPlaybackPreset = !!opts.commitPlaybackPreset || !opts.noSave;
@@ -22548,7 +22578,8 @@ function setPreset(p, opts) {
 }
 
 function syncFxUniforms() {
-  uniforms.uPreset.value = fx.preset;
+  uniforms.uPreset.value = shaderPresetFor(fx.preset);
+  uniforms.uWallpaperVariant.value = wallpaperVariantFor(fx.preset);
   uniforms.uIntensity.value = fx.intensity;
   uniforms.uDepth.value = fx.depth;
   uniforms.uPointScale.value = fx.point;
@@ -22619,7 +22650,7 @@ function updateDevelopmentFxControls() {
     ['desktopLyricsClickThrough', 't-desktopLyricsClickThrough', '锁定后防误触；鼠标移到桌面歌词上按中键可锁定/解锁'],
     ['desktopLyricsCinema', 't-desktopLyricsCinema', '桌面歌词绑定鼓点电影震动，基础漂浮始终保留'],
     ['desktopLyricsHighlight', 't-desktopLyricsHighlight', '桌面歌词按播放进度高亮'],
-    ['wallpaperMode', 't-wallpaperMode', '将动态视觉挂载到 Windows 桌面壁纸层']
+    ['wallpaperMode', 't-wallpaperMode', '开发中，暂不可用']
   ].forEach(function(item){
     var locked = isDevelopmentLockedFx(item[0]);
     var el = document.getElementById(item[1]);
@@ -22692,22 +22723,6 @@ function setPerformanceQualityMode(mode, silent) {
     showToast('画质档位: ' + label);
   }
 }
-function updateWallpaperTemplateControls() {
-  var template = normalizeWallpaperTemplate(fx && fx.wallpaperTemplate);
-  document.querySelectorAll('#wallpaper-template-grid [data-wallpaper]').forEach(function(btn){
-    btn.classList.toggle('active', btn.getAttribute('data-wallpaper') === template);
-  });
-}
-function setWallpaperTemplate(template, silent) {
-  fx.wallpaperTemplate = normalizeWallpaperTemplate(template);
-  updateWallpaperTemplateControls();
-  saveLyricLayout();
-  pushWallpaperState(true);
-  if (!silent) {
-    var names = { aurora:'极光脉冲', halo:'日蚀光环', vinyl:'黑胶唱片', constellation:'星图连线' };
-    showToast('动态壁纸: ' + names[fx.wallpaperTemplate]);
-  }
-}
 function updateFxInputs() {
   normalizeDevelopmentLockedFxState();
   applyShelfCameraDefaultAngle(false);
@@ -22774,7 +22789,6 @@ function updateFxInputs() {
   updateDesktopLyricsFpsControls();
   var wallpaperModeToggle = document.getElementById('t-wallpaperMode');
   if (wallpaperModeToggle) wallpaperModeToggle.classList.toggle('on', fx.wallpaperMode);
-  updateWallpaperTemplateControls();
   var shelfPodcastsToggle = document.getElementById('t-shelfShowPodcasts');
   if (shelfPodcastsToggle) shelfPodcastsToggle.classList.toggle('on', fx.shelfShowPodcasts !== false);
   var shelfMergeToggle = document.getElementById('t-shelfMergeCollections');
@@ -27910,7 +27924,6 @@ function wallpaperPayload() {
     cover: meta.cover,
     playing: !!playing,
     preset: fx.preset,
-    template: normalizeWallpaperTemplate(fx.wallpaperTemplate),
     opacity: clampRange(fx.wallpaperOpacity == null ? fxDefaults.wallpaperOpacity : Number(fx.wallpaperOpacity), 0.35, 1),
     colors: desktopOverlayColors()
   };
@@ -27945,7 +27958,7 @@ function pushWallpaperState(force) {
   var now = performance.now();
   if (!force && now - desktopOverlayPushState.wallpaperAt < 260) return;
   var payload = wallpaperPayload();
-  var key = payload.enabled + '|' + payload.title + '|' + payload.artist + '|' + payload.cover + '|' + payload.playing + '|' + payload.preset + '|' + payload.template + '|' + payload.opacity;
+  var key = payload.enabled + '|' + payload.title + '|' + payload.artist + '|' + payload.cover + '|' + payload.playing + '|' + payload.preset + '|' + payload.opacity;
   if (!force && key === desktopOverlayPushState.lastWallpaperKey && now - desktopOverlayPushState.wallpaperAt < 1400) return;
   desktopOverlayPushState.wallpaperAt = now;
   desktopOverlayPushState.lastWallpaperKey = key;
@@ -28383,7 +28396,7 @@ function animate() {
   mid  = Math.min(0.72, smoothMid * 1.12) * fx.intensity;
   treble = Math.min(0.62, smoothTreb * 1.20) * fx.intensity;
   if (fx.preset >= 4) {
-    var wallpaperAudio = fx.preset === 5;
+    var wallpaperAudio = isInternalWallpaperPreset(fx.preset);
     var ringBass = smoothBass * (wallpaperAudio ? 1.10 : 1.58) + beatPulse * (wallpaperAudio ? 0.18 : 0.42) - smoothMid * 0.16 - smoothTreb * 0.06;
     var ringMid = smoothMid * (wallpaperAudio ? 1.16 : 1.82) - smoothBass * 0.14 - smoothTreb * 0.07;
     var ringTreble = smoothTreb * (wallpaperAudio ? 1.34 : 2.28) - smoothMid * 0.10 - smoothBass * 0.05;
