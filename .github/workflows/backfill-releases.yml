@@ -1,0 +1,103 @@
+name: Backfill historical Windows releases
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/backfill-releases.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  backfill:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - version: "1.1.3"
+            source_ref: "v1.1.3"
+            release_exists: true
+          - version: "1.2.0"
+            source_ref: "ab3885f"
+            release_exists: false
+
+    steps:
+      - name: Checkout exact historical source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.source_ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify source version
+        shell: pwsh
+        run: |
+          $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          if ($version -ne "${{ matrix.version }}") {
+            throw "Source version $version does not match ${{ matrix.version }}"
+          }
+
+      - name: Build historical Windows artifacts
+        run: npm run build:win
+
+      - name: Create portable ZIP and checksums
+        shell: pwsh
+        run: |
+          $version = "${{ matrix.version }}"
+          $portable = "dist/Mineradio-$version-Portable.zip"
+          tar -a -cf $portable -C dist/win-unpacked .
+
+          $assets = @(
+            "dist/Mineradio-$version-Setup.exe",
+            "dist/Mineradio-$version-Setup.exe.blockmap",
+            $portable,
+            "dist/latest.yml"
+          )
+          $checksums = $assets | ForEach-Object {
+            $hash = Get-FileHash $_ -Algorithm SHA256
+            "$($hash.Hash)  $([IO.Path]::GetFileName($_))"
+          }
+          [IO.File]::WriteAllLines(
+            "dist/Mineradio-$version-SHA256SUMS.txt",
+            $checksums,
+            [Text.UTF8Encoding]::new($false)
+          )
+
+      - name: Upload historical Release assets
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $version = "${{ matrix.version }}"
+          $tag = "v$version"
+          $portableAssets = @(
+            "dist/Mineradio-$version-Portable.zip",
+            "dist/Mineradio-$version-SHA256SUMS.txt"
+          )
+
+          if ("${{ matrix.release_exists }}" -eq "true") {
+            gh release upload $tag @portableAssets --clobber
+          } else {
+            $allAssets = @(
+              "dist/Mineradio-$version-Setup.exe",
+              "dist/Mineradio-$version-Setup.exe.blockmap",
+              "dist/Mineradio-$version-Portable.zip",
+              "dist/Mineradio-$version-SHA256SUMS.txt",
+              "dist/latest.yml"
+            )
+            gh release create $tag @allAssets `
+              --target "${{ matrix.source_ref }}" `
+              --title "Mineradio v$version" `
+              --notes "历史正式版本归档。安装版与便携版均从对应提交的源码重新构建。" `
+              --latest=false
+          }

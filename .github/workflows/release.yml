@@ -1,0 +1,108 @@
+name: Build and publish Windows release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout tagged source
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify tag and source version
+        shell: pwsh
+        run: |
+          $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          if ("v$version" -ne "${{ github.ref_name }}") {
+            throw "Tag ${{ github.ref_name }} does not match package version $version"
+          }
+
+      - name: Run syntax checks
+        shell: pwsh
+        run: |
+          node --check server.js
+          node --check desktop/main.js
+          node --check desktop/preload.js
+          git diff --check
+
+      - name: Build Windows installer
+        run: npm run build:win
+
+      - name: Create portable ZIP, checksums and release notes
+        shell: pwsh
+        run: |
+          $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          $portable = "dist/Mineradio-$version-Portable.zip"
+          tar -a -cf $portable -C dist/win-unpacked .
+
+          $assets = @(
+            "dist/Mineradio-$version-Setup.exe",
+            "dist/Mineradio-$version-Setup.exe.blockmap",
+            $portable,
+            "dist/latest.yml"
+          )
+          $checksums = $assets | ForEach-Object {
+            $hash = Get-FileHash $_ -Algorithm SHA256
+            "$($hash.Hash)  $([IO.Path]::GetFileName($_))"
+          }
+          [IO.File]::WriteAllLines(
+            "dist/Mineradio-$version-SHA256SUMS.txt",
+            $checksums,
+            [Text.UTF8Encoding]::new($false)
+          )
+
+          $changelog = Get-Content CHANGELOG.md -Raw
+          $escapedVersion = [regex]::Escape($version)
+          $match = [regex]::Match(
+            $changelog,
+            "(?ms)^## v$escapedVersion\s*\r?\n(?<body>.*?)(?=^## |\z)"
+          )
+          $notes = if ($match.Success) {
+            $match.Groups["body"].Value.Trim()
+          } else {
+            "Mineradio v$version"
+          }
+          [IO.File]::WriteAllText(
+            "dist/RELEASE_NOTES.md",
+            $notes,
+            [Text.UTF8Encoding]::new($false)
+          )
+
+      - name: Publish GitHub Release assets
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          $tag = "${{ github.ref_name }}"
+          $assets = @(
+            "dist/Mineradio-$version-Setup.exe",
+            "dist/Mineradio-$version-Setup.exe.blockmap",
+            "dist/Mineradio-$version-Portable.zip",
+            "dist/Mineradio-$version-SHA256SUMS.txt",
+            "dist/latest.yml"
+          )
+
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release edit $tag --title "Mineradio v$version" --notes-file dist/RELEASE_NOTES.md --latest
+            gh release upload $tag @assets --clobber
+          } else {
+            gh release create $tag @assets --title "Mineradio v$version" --notes-file dist/RELEASE_NOTES.md --latest
+          }
