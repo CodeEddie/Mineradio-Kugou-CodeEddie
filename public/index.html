@@ -331,6 +331,41 @@ body.empty-home-active .home-visual{animation:home-visual-drift 8.8s ease-in-out
 .home-card-art{position:absolute;z-index:1;right:13px;bottom:13px;width:108px;height:108px;border-radius:24px;background:linear-gradient(135deg,color-mix(in srgb,var(--tone-a) 78%,#14141a),color-mix(in srgb,var(--tone-b) 68%,#09090d));background-size:cover;background-position:center;box-shadow:0 18px 50px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.16);transform:rotate(3deg);overflow:hidden}
 .home-card-art:not(.has-cover)::before{content:'';position:absolute;inset:18px;border-radius:50%;background:repeating-radial-gradient(circle,rgba(255,255,255,.16) 0 1px,transparent 1px 8px),conic-gradient(from 180deg,var(--tone-a),var(--tone-b),var(--tone-c),var(--tone-a));box-shadow:inset 0 0 0 14px rgba(5,5,8,.44),0 12px 28px rgba(0,0,0,.26)}
 .home-card-art::after{content:'';position:absolute;inset:0;background:linear-gradient(145deg,rgba(255,255,255,.12),transparent 42%,rgba(0,0,0,.28));pointer-events:none}
+.home-card[data-home-slot]{user-select:none}
+.home-card[data-home-slot]::selection{background:transparent}
+.home-card-add{display:grid;place-items:center;min-height:152px;border-style:dashed;background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.014));color:rgba(255,255,255,.58)}
+.home-card-add::before{background:radial-gradient(circle at 50% 48%,color-mix(in srgb,var(--home-accent) 12%,transparent),transparent 46%)}
+.home-card-add::after{display:none}
+.home-card-add-mark{position:relative;z-index:2;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;border:1px solid color-mix(in srgb,var(--home-accent) 34%,rgba(255,255,255,.14));background:rgba(255,255,255,.045);font-size:30px;font-weight:260;line-height:1;color:rgba(255,255,255,.84);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 14px 32px rgba(0,0,0,.24)}
+.home-card-add-copy{position:relative;z-index:2;margin-top:-28px;font-size:10px;font-weight:700;letter-spacing:.08em;color:rgba(255,255,255,.38)}
+.home-daily-sources{position:absolute;z-index:4;left:17px;bottom:14px;display:flex;gap:5px;pointer-events:auto!important}
+.home-daily-source{height:21px;min-width:24px;padding:0 7px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(4,5,8,.38);display:inline-flex;align-items:center;justify-content:center;color:rgba(255,255,255,.46);font-size:8.5px;font-weight:780;letter-spacing:.04em;transition:color .16s,border-color .16s,background .16s,transform .16s;pointer-events:auto!important}
+.home-daily-source:hover,.home-daily-source.active{color:#fff;border-color:color-mix(in srgb,var(--home-accent) 42%,rgba(255,255,255,.14));background:color-mix(in srgb,var(--home-accent) 14%,rgba(5,6,9,.64));transform:translateY(-1px)}
+.home-card-menu{position:fixed;z-index:96;display:none;min-width:150px;padding:6px;border-radius:14px;border:1px solid rgba(255,255,255,.13);background:rgba(12,13,17,.90);box-shadow:0 20px 58px rgba(0,0,0,.50),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(24px) saturate(1.2);-webkit-backdrop-filter:blur(24px) saturate(1.2)}
+.home-card-menu.show{display:block;animation:home-menu-in .16s cubic-bezier(.16,1,.3,1)}
+.home-card-menu button{width:100%;height:34px;padding:0 11px;border:0;border-radius:9px;background:transparent;color:rgba(255,255,255,.76);font-family:inherit;font-size:11px;font-weight:650;text-align:left;cursor:pointer}
+.home-card-menu button:hover{background:rgba(255,83,103,.12);color:#fff}
+.home-card-picker-mask{position:fixed;z-index:95;inset:0;display:none;align-items:center;justify-content:center;padding:28px;background:rgba(0,0,0,.46);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.home-card-picker-mask.show{display:flex}
+.home-card-picker{width:min(680px,calc(100vw - 48px));max-height:min(650px,calc(100vh - 72px));overflow:hidden;border-radius:24px;border:1px solid rgba(255,255,255,.13);background:linear-gradient(145deg,rgba(25,26,31,.94),rgba(8,9,13,.96));box-shadow:0 32px 110px rgba(0,0,0,.62),inset 0 1px 0 rgba(255,255,255,.07);animation:home-picker-in .28s cubic-bezier(.16,1,.3,1)}
+.home-card-picker-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 22px 15px;border-bottom:1px solid rgba(255,255,255,.07)}
+.home-card-picker-title{font-size:17px;font-weight:780;color:#fff}
+.home-card-picker-sub{margin-top:4px;font-size:10.5px;color:rgba(255,255,255,.42)}
+.home-card-picker-close{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.045);color:rgba(255,255,255,.66);font-size:18px;cursor:pointer}
+.home-card-picker-body{max-height:min(540px,calc(100vh - 170px));overflow:auto;padding:17px 20px 22px}
+.home-card-picker-section+.home-card-picker-section{margin-top:20px}
+.home-card-picker-label{margin:0 0 9px 2px;color:rgba(255,255,255,.38);font-size:9px;font-weight:780;letter-spacing:.14em;text-transform:uppercase}
+.home-card-picker-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.home-card-picker-item{min-width:0;min-height:62px;padding:9px 11px;border:1px solid rgba(255,255,255,.075);border-radius:15px;background:rgba(255,255,255,.035);display:flex;align-items:center;gap:11px;color:#fff;text-align:left;font-family:inherit;cursor:pointer;transition:border-color .18s,background .18s,transform .18s}
+.home-card-picker-item:hover{transform:translateY(-1px);border-color:color-mix(in srgb,var(--home-accent) 34%,rgba(255,255,255,.12));background:color-mix(in srgb,var(--home-accent) 8%,rgba(255,255,255,.04))}
+.home-card-picker-cover{width:43px;height:43px;flex:0 0 43px;border-radius:11px;background:linear-gradient(135deg,color-mix(in srgb,var(--home-accent) 42%,#262832),rgba(7,8,11,.88));background-size:cover;background-position:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.home-card-picker-copy{min-width:0}
+.home-card-picker-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:720}
+.home-card-picker-meta{margin-top:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:rgba(255,255,255,.42);font-size:9.5px}
+.home-card-picker-empty{padding:16px;border:1px dashed rgba(255,255,255,.10);border-radius:15px;color:rgba(255,255,255,.40);font-size:11px;text-align:center}
+@keyframes home-menu-in{from{opacity:0;transform:translateY(-4px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes home-picker-in{from{opacity:0;transform:translateY(12px) scale(.975)}to{opacity:1;transform:none}}
+@media (max-width:620px){.home-card-picker-list{grid-template-columns:1fr}.home-daily-sources{left:14px;bottom:11px}}
 .home-rail{align-self:stretch;min-height:0;display:grid;grid-template-rows:auto 1fr;gap:12px}
 .home-tile-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;min-height:0}
 .home-tile{--tone-a:#00f5d4;--tone-b:#2442ff;--tone-c:#f8f4ee;position:relative;min-width:0;min-height:166px;border:1px solid color-mix(in srgb,var(--home-accent) 9%,rgba(255,255,255,.075));border-radius:20px;background:linear-gradient(145deg,rgba(255,255,255,.060),rgba(255,255,255,.025));box-shadow:0 16px 50px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.052);backdrop-filter:blur(20px) saturate(1.10);-webkit-backdrop-filter:blur(20px) saturate(1.10);padding:10px;color:#fff;text-align:left;font-family:inherit;cursor:pointer;transition:transform .2s,border-color .2s,background .2s,box-shadow .2s;overflow:hidden}
@@ -2113,44 +2148,7 @@ html.control-glass-svg-ok #visual-guide-btn:hover{
       </div>
     </div>
 
-    <div class="home-grid">
-      <button class="home-card" data-home-tone="library" type="button" onclick="openHomeLibrary()">
-        <div class="home-card-label">Library</div>
-        <div class="home-card-title" id="home-weather-card-title">我的歌单</div>
-        <div class="home-card-sub" id="home-weather-card-sub">打开左侧歌单库</div>
-        <div class="home-card-art" id="home-weather-art"></div>
-      </button>
-      <button class="home-card" data-home-tone="mix" type="button" onclick="playHomeSong(0)">
-        <div class="home-card-label">Daily</div>
-        <div class="home-card-title" id="home-daily-title">每日推荐</div>
-        <div class="home-card-sub" id="home-daily-sub">登录后同步你的今日歌曲</div>
-        <div class="home-card-art" id="home-daily-art"></div>
-      </button>
-      <button class="home-card" data-home-tone="playlist" type="button" onclick="playHomeSong(1)">
-        <div class="home-card-label">Song</div>
-        <div class="home-card-title" id="home-private-title">私人电台</div>
-        <div class="home-card-sub" id="home-private-sub">从你的推荐和歌单里开播</div>
-        <div class="home-card-art" id="home-private-art"></div>
-      </button>
-      <button class="home-card" data-home-tone="mix" type="button" onclick="playHomeRecent()">
-        <div class="home-card-label">Continue</div>
-        <div class="home-card-title" id="home-continue-title">继续听</div>
-        <div class="home-card-sub" id="home-continue-sub">最近播放会出现在这里</div>
-        <div class="home-card-art" id="home-continue-art"></div>
-      </button>
-      <button class="home-card" data-home-tone="local" type="button" onclick="openHomeInsight()">
-        <div class="home-card-label">Profile</div>
-        <div class="home-card-title" id="home-profile-title">听歌画像</div>
-        <div class="home-card-sub" id="home-profile-sub">播放几首后生成偏好</div>
-        <div class="home-card-art" id="home-profile-art"></div>
-      </button>
-      <button class="home-card" data-home-tone="local" type="button" onclick="playHomeSong(2)">
-        <div class="home-card-label">Song</div>
-        <div class="home-card-title" id="home-library-title">常听歌手</div>
-        <div class="home-card-sub" id="home-library-sub">你的偏好会在这里汇总</div>
-        <div class="home-card-art" id="home-library-art"></div>
-      </button>
-    </div>
+    <div class="home-grid" id="home-card-grid"></div>
 
     <div class="home-rail">
       <div class="home-section-head">
@@ -2161,6 +2159,23 @@ html.control-glass-svg-ok #visual-guide-btn:hover{
     </div>
   </div>
 </section>
+
+<div id="home-card-menu" class="home-card-menu" role="menu" aria-hidden="true">
+  <button type="button" role="menuitem" onclick="removeSelectedHomeCard()">从首页移除</button>
+</div>
+
+<div id="home-card-picker-mask" class="home-card-picker-mask" aria-hidden="true" onclick="if(event.target===this)closeHomeCardPicker()">
+  <div class="home-card-picker" role="dialog" aria-modal="true" aria-labelledby="home-card-picker-title">
+    <div class="home-card-picker-head">
+      <div>
+        <div class="home-card-picker-title" id="home-card-picker-title">添加到首页</div>
+        <div class="home-card-picker-sub">选择一个系统入口，或放入自己的云端歌单</div>
+      </div>
+      <button class="home-card-picker-close" type="button" onclick="closeHomeCardPicker()" aria-label="关闭">×</button>
+    </div>
+    <div class="home-card-picker-body" id="home-card-picker-body"></div>
+  </div>
+</div>
 
 <!-- 顶部右侧 (只保留用户) -->
 <div id="top-right">
@@ -2985,8 +3000,30 @@ var visualGuideState = { bottomWasVisible: false, searchWasPeek: false, manual: 
 var emptyHomeActive = false;
 var homeForcedOpen = false;
 var homeSuppressed = false;
-var homeDiscoverState = { loading: false, loaded: false, loggedIn: false, mode: 'starter', songs: [], playlists: [], podcasts: [], error: '', updatedAt: 0 };
+var homeDiscoverState = {
+  loading: false,
+  loaded: false,
+  loggedIn: false,
+  mode: 'starter',
+  songs: [],
+  dailySongsByProvider: { netease: [], qq: [], kugou: [] },
+  providers: { netease: false, qq: false, kugou: false },
+  playlists: [],
+  podcasts: [],
+  error: '',
+  updatedAt: 0
+};
 var homeDiscoverToken = 0;
+var HOME_CARD_SLOTS_KEY = 'mineradio-home-card-slots-v1';
+var HOME_DAILY_PROVIDER_KEY = 'mineradio-home-daily-provider-v1';
+var HOME_BUILTIN_CARD_KEYS = ['library', 'daily', 'private', 'recent', 'profile', 'artist'];
+var homeCardSlots = loadHomeCardSlots();
+var homeCardPickerSlot = -1;
+var selectedHomeCardSlot = -1;
+var homeCardGlobalEventsBound = false;
+var homeDailyProvider = /^(all|netease|qq|kugou)$/.test(localStorage.getItem(HOME_DAILY_PROVIDER_KEY) || '')
+  ? localStorage.getItem(HOME_DAILY_PROVIDER_KEY)
+  : 'all';
 var homeVisualPresetActive = false;
 var homeVisualPrevPreset = 0;
 var HOME_LISTEN_STATS_KEY = 'mineradio-listen-stats-v1';
@@ -13253,14 +13290,27 @@ function makeShelfManager() {
   }
 
   function currentItems() {
-    if (hasAnyPlatformLogin() && (userPlaylists.length || myPodcastCollections.length)) {
+    var dailySongs = typeof homeDailySongs === 'function' ? homeDailySongs() : [];
+    if (hasAnyPlatformLogin() && (userPlaylists.length || myPodcastCollections.length || dailySongs.length)) {
       var source = activePlaylists();
-      var items = source.map(function(pl){
+      var items = [];
+      if (dailySongs.length && (shelfPane === 'mine' || shelfMergesCollections())) {
+        items.push({
+          type:'playlist',
+          title:'每日推荐',
+          sub:homeDailyProviderLabel(homeDailyProvider) + ' · ' + dailySongs.length + ' 首 · 每天更新',
+          cover:songCoverSrc(dailySongs[0], 360),
+          tag:'今日歌曲',
+          playlistId:'daily:' + homeDailyProvider,
+          provider:'daily'
+        });
+      }
+      items = items.concat(source.map(function(pl){
         var provider = pl.provider === 'qq' ? 'qq' : (pl.provider === 'kugou' ? 'kugou' : 'netease');
         var sourceLabel = provider === 'qq' ? 'QQ' : (provider === 'kugou' ? 'KG' : 'NE');
         return { type:'playlist', title: pl.name, sub:sourceLabel + ' · ' + (pl.trackCount||0)+' 首 · 播放 '+compactCount(pl.playCount||0),
           cover: pl.cover || '', tag: pl.subscribed ? '收藏歌单' : '我的歌单', playlistId: (provider === 'qq' ? 'qq:' : (provider === 'kugou' ? 'kugou:' : '')) + pl.id, provider: provider };
-      });
+      }));
       if (shelfShowsPodcasts() && (shelfPane === 'mine' || shelfMergesCollections()) && myPodcastCollections.length) {
         myPodcastCollections.forEach(function(pc){
           items.push({ type:'podcastCollection', title: pc.title, sub:(pc.count || 0) + ' items', cover: pc.cover || '', tag:'我的播客', podcastKey: pc.key, itemType: pc.itemType });
@@ -13772,7 +13822,8 @@ void main(){ vec4 t = texture2D(uDotTex, gl_PointCoord); if (t.a < 0.02) discard
   }
 
   function sig(items) {
-    if (hasAnyPlatformLogin() && (userPlaylists.length || myPodcastCollections.length)) {
+    var dailySongs = typeof homeDailySongs === 'function' ? homeDailySongs() : [];
+    if (hasAnyPlatformLogin() && (userPlaylists.length || myPodcastCollections.length || dailySongs.length)) {
       var source = activePlaylists();
       items = items || currentItems();
       var sampleItems = items.slice(0, 3).concat(items.slice(Math.max(3, items.length - 3)));
@@ -13783,6 +13834,8 @@ void main(){ vec4 t = texture2D(uDotTex, gl_PointCoord); if (t.a < 0.02) discard
         shelfShowsPodcasts() ? 1 : 0,
         source.length,
         myPodcastCollections.length,
+        homeDailyProvider,
+        dailySongs.length,
         sampleItems.map(function(it){
           return [it.type || '', it.playlistId || '', it.podcastKey || '', it.title || '', it.sub || '', it.tag || ''].join('|');
         }).join('||')
@@ -14686,19 +14739,22 @@ function makeContentListManager() {
         console.warn('[ShelfContentLoadingRender]', playlistId, renderLoadingErr);
       }
       var podcastCollectionKey = String(playlistId || '').indexOf('podcast:') === 0 ? String(playlistId).slice(8) : '';
+      var dailyPlaylistProvider = String(playlistId || '').indexOf('daily:') === 0 ? (String(playlistId).slice(6) || 'all') : '';
       var qqPlaylistId = String(playlistId || '').indexOf('qq:') === 0 ? String(playlistId).slice(3) : '';
       var kugouPlaylistId = String(playlistId || '').indexOf('kugou:') === 0 ? String(playlistId).slice(6) : '';
       contentKind = podcastCollectionKey ? 'podcast' : 'playlist';
       // 拉取歌单/播客集合
       var r = null;
       try {
-        r = podcastCollectionKey
+        r = dailyPlaylistProvider
+          ? { tracks: homeDailySongs(dailyPlaylistProvider), playlist: { name:'每日推荐', provider:dailyPlaylistProvider } }
+          : (podcastCollectionKey
           ? await apiJson('/api/podcast/my/items?key=' + encodeURIComponent(podcastCollectionKey) + '&limit=36')
           : (qqPlaylistId
             ? await apiJson('/api/qq/playlist/tracks?id=' + encodeURIComponent(qqPlaylistId))
             : (kugouPlaylistId
               ? await apiJson('/api/kugou/playlist/tracks?id=' + encodeURIComponent(kugouPlaylistId))
-              : await apiJson('/api/playlist/tracks?id=' + encodeURIComponent(playlistId))));
+              : await apiJson('/api/playlist/tracks?id=' + encodeURIComponent(playlistId)))));
       } catch (e) {
         if (!open || token !== requestToken) return;
         console.warn('[ShelfContentLoadApi]', playlistId, e);
@@ -15854,6 +15910,300 @@ function setHomeArt(id, url, size) {
   el.classList.toggle('has-cover', !!src);
   el.classList.toggle('home-skeleton', !src && homeDiscoverState.loading);
 }
+function loadHomeCardSlots() {
+  try {
+    var saved = JSON.parse(localStorage.getItem(HOME_CARD_SLOTS_KEY) || 'null');
+    if (Array.isArray(saved)) {
+      return saved.slice(0, 6).concat(new Array(Math.max(0, 6 - saved.length)).fill(null)).map(function(key){
+        return typeof key === 'string' && key ? key : null;
+      });
+    }
+  } catch (e) {}
+  return HOME_BUILTIN_CARD_KEYS.slice();
+}
+function saveHomeCardSlots() {
+  try { localStorage.setItem(HOME_CARD_SLOTS_KEY, JSON.stringify(homeCardSlots.slice(0, 6))); } catch (e) {}
+}
+function homeBuiltinCardMeta(key) {
+  var items = {
+    library: { label:'Library', title:'我的歌单', sub:'打开左侧歌单库', tone:'library' },
+    daily: { label:'Daily', title:'每日推荐', sub:'网易云 / QQ / 酷狗', tone:'mix' },
+    private: { label:'Radio', title:'私人电台', sub:'从今日推荐连续播放', tone:'playlist' },
+    recent: { label:'Continue', title:'继续听', sub:'返回最近播放', tone:'mix' },
+    profile: { label:'Profile', title:'听歌画像', sub:'查看常听歌手与偏好', tone:'local' },
+    artist: { label:'Artist', title:'常听歌手', sub:'从你的偏好继续播放', tone:'local' }
+  };
+  return items[key] || null;
+}
+function homeDailySongs(provider) {
+  provider = provider || homeDailyProvider || 'all';
+  var groups = homeDiscoverState.dailySongsByProvider || {};
+  if (provider !== 'all') return (groups[provider] || []).map(cloneSong);
+  return (homeDiscoverState.songs || []).map(cloneSong);
+}
+function homeDailyProviderLabel(provider) {
+  if (provider === 'netease') return '网易云';
+  if (provider === 'qq') return 'QQ';
+  if (provider === 'kugou') return '酷狗';
+  return '全部来源';
+}
+function homeDailyProviderAvailable(provider) {
+  if (provider === 'all') return homeDailySongs('all').length > 0 || hasAnyPlatformLogin();
+  var groups = homeDiscoverState.dailySongsByProvider || {};
+  var providers = homeDiscoverState.providers || {};
+  return !!((groups[provider] && groups[provider].length) || providers[provider] || hasPlatformLogin(provider));
+}
+function homeDailySourceChipsHtml() {
+  return '<span class="home-daily-sources" aria-label="每日推荐来源">' +
+    ['all', 'netease', 'qq', 'kugou'].filter(homeDailyProviderAvailable).map(function(provider){
+      var short = provider === 'all' ? 'ALL' : (provider === 'netease' ? 'NE' : (provider === 'qq' ? 'QQ' : 'KG'));
+      return '<span class="home-daily-source' + (homeDailyProvider === provider ? ' active' : '') + '" role="button" tabindex="0" data-home-daily-provider="' + provider + '" title="' + homeDailyProviderLabel(provider) + '">' + short + '</span>';
+    }).join('') +
+  '</span>';
+}
+function homeBuiltinCardHtml(key, slot) {
+  var meta = homeBuiltinCardMeta(key);
+  if (!meta) return '';
+  var idMap = {
+    library: ['home-weather-card-title', 'home-weather-card-sub', 'home-weather-art'],
+    daily: ['home-daily-title', 'home-daily-sub', 'home-daily-art'],
+    private: ['home-private-title', 'home-private-sub', 'home-private-art'],
+    recent: ['home-continue-title', 'home-continue-sub', 'home-continue-art'],
+    profile: ['home-profile-title', 'home-profile-sub', 'home-profile-art'],
+    artist: ['home-library-title', 'home-library-sub', 'home-library-art']
+  };
+  var ids = idMap[key];
+  return '<button class="home-card" data-home-tone="' + meta.tone + '" data-home-slot="' + slot + '" type="button">' +
+    '<div class="home-card-label">' + meta.label + '</div>' +
+    '<div class="home-card-title" id="' + ids[0] + '">' + meta.title + '</div>' +
+    '<div class="home-card-sub" id="' + ids[1] + '">' + meta.sub + '</div>' +
+    '<div class="home-card-art" id="' + ids[2] + '"></div>' +
+    (key === 'daily' ? homeDailySourceChipsHtml() : '') +
+  '</button>';
+}
+function homePlaylistSlotKey(pl) {
+  if (!pl || !pl.id) return '';
+  var provider = pl.provider === 'qq' ? 'qq' : (pl.provider === 'kugou' ? 'kugou' : 'netease');
+  return 'playlist:' + provider + ':' + String(pl.id);
+}
+function homePlaylistFromSlotKey(key) {
+  var match = String(key || '').match(/^playlist:(netease|qq|kugou):(.+)$/);
+  if (!match) return null;
+  return userPlaylists.find(function(pl){
+    var provider = pl.provider === 'qq' ? 'qq' : (pl.provider === 'kugou' ? 'kugou' : 'netease');
+    return provider === match[1] && String(pl.id || '') === match[2];
+  }) || null;
+}
+function homePlaylistCardHtml(key, slot) {
+  var pl = homePlaylistFromSlotKey(key);
+  var match = String(key || '').match(/^playlist:(netease|qq|kugou):(.+)$/);
+  var provider = pl && pl.provider || match && match[1] || 'netease';
+  var providerLabel = homeDailyProviderLabel(provider);
+  var title = pl && pl.name || '歌单暂不可用';
+  var count = pl && Number(pl.trackCount) || 0;
+  var sub = pl ? (providerLabel + (count ? ' · ' + count + ' 首' : ' · 我的歌单')) : (providerLabel + ' · 登录后重试');
+  var cover = pl && pl.cover ? coverUrlWithSize(pl.cover, 280) : '';
+  var tone = provider === 'qq' ? 'playlist' : (provider === 'kugou' ? 'local' : 'library');
+  return '<button class="home-card" data-home-tone="' + tone + '" data-home-slot="' + slot + '" type="button">' +
+    '<div class="home-card-label">' + escHtml(providerLabel) + ' Playlist</div>' +
+    '<div class="home-card-title">' + escHtml(title) + '</div>' +
+    '<div class="home-card-sub">' + escHtml(sub) + '</div>' +
+    '<div class="home-card-art' + (cover ? ' has-cover' : '') + '"' + (cover ? ' style="background-image:url(&quot;' + escHtml(cssImageUrl(cover)) + '&quot;)"' : '') + '></div>' +
+  '</button>';
+}
+function homeAddCardHtml(slot) {
+  return '<button class="home-card home-card-add" data-home-tone="library" data-home-slot="' + slot + '" type="button" aria-label="添加首页歌单或功能">' +
+    '<span class="home-card-add-mark">+</span><span class="home-card-add-copy">添加歌单或功能</span>' +
+  '</button>';
+}
+function runHomeCardAction(key) {
+  if (key === 'library') return openHomeLibrary();
+  if (key === 'daily') return playHomeDaily();
+  if (key === 'private') return playHomePrivateRadio();
+  if (key === 'recent') return playHomeRecent();
+  if (key === 'profile') return openHomeInsight();
+  if (key === 'artist') return playHomeSong(2);
+  var pl = homePlaylistFromSlotKey(key);
+  if (!pl) {
+    showToast('该歌单暂不可用，请确认对应平台已登录');
+    return;
+  }
+  loadPlaylistIntoQueueById(playlistPanelProviderId(pl.provider, pl.id), true, pl.name || '我的歌单');
+}
+function renderHomeCardSlots() {
+  var grid = document.getElementById('home-card-grid');
+  if (!grid) return;
+  homeCardSlots = homeCardSlots.slice(0, 6).concat(new Array(Math.max(0, 6 - homeCardSlots.length)).fill(null));
+  var groups = homeDiscoverState.dailySongsByProvider || {};
+  var providers = homeDiscoverState.providers || {};
+  var playlistSignature = homeCardSlots.map(function(key){
+    var pl = homePlaylistFromSlotKey(key);
+    return pl ? [key, pl.name || '', pl.cover || '', pl.trackCount || 0].join('|') : (key || '');
+  }).join('::');
+  var signature = [
+    playlistSignature,
+    homeDailyProvider,
+    ['netease', 'qq', 'kugou'].map(function(provider){
+      return provider + ':' + (providers[provider] ? 1 : 0) + ':' + ((groups[provider] || []).length);
+    }).join('|')
+  ].join('###');
+  if (grid.getAttribute('data-home-card-signature') === signature && grid.children.length === 6) return;
+  grid.setAttribute('data-home-card-signature', signature);
+  grid.innerHTML = homeCardSlots.map(function(key, slot){
+    if (!key) return homeAddCardHtml(slot);
+    if (HOME_BUILTIN_CARD_KEYS.indexOf(key) >= 0) return homeBuiltinCardHtml(key, slot);
+    return homePlaylistCardHtml(key, slot);
+  }).join('');
+  Array.prototype.forEach.call(grid.querySelectorAll('[data-home-slot]'), function(card){
+    var slot = Number(card.getAttribute('data-home-slot'));
+    card.addEventListener('click', function(event){
+      var source = event.target && event.target.closest && event.target.closest('[data-home-daily-provider]');
+      if (source) {
+        event.preventDefault();
+        event.stopPropagation();
+        selectHomeDailyProvider(source.getAttribute('data-home-daily-provider'));
+        return;
+      }
+      if (!homeCardSlots[slot]) openHomeCardPicker(slot);
+      else runHomeCardAction(homeCardSlots[slot]);
+    });
+    card.addEventListener('keydown', function(event){
+      var source = event.target && event.target.closest && event.target.closest('[data-home-daily-provider]');
+      if (source && (event.key === 'Enter' || event.key === ' ')) {
+        event.preventDefault();
+        event.stopPropagation();
+        selectHomeDailyProvider(source.getAttribute('data-home-daily-provider'));
+      } else if (homeCardSlots[slot] && event.shiftKey && event.key === 'F10') {
+        var rect = card.getBoundingClientRect();
+        openHomeCardMenu(event, slot, rect.left + rect.width / 2, rect.top + rect.height / 2);
+      }
+    });
+    if (homeCardSlots[slot]) {
+      card.addEventListener('contextmenu', function(event){ openHomeCardMenu(event, slot); });
+      card.title = '右键可从首页移除';
+    }
+  });
+  bindHomeCardGlobalEvents();
+}
+function selectHomeDailyProvider(provider) {
+  if (!/^(all|netease|qq|kugou)$/.test(provider) || !homeDailyProviderAvailable(provider)) return;
+  homeDailyProvider = provider;
+  try { localStorage.setItem(HOME_DAILY_PROVIDER_KEY, provider); } catch (e) {}
+  renderHomeDiscover();
+  safeShelfRebuild('home-daily-provider', true);
+  showToast('每日推荐来源：' + homeDailyProviderLabel(provider));
+}
+function bindHomeCardGlobalEvents() {
+  if (homeCardGlobalEventsBound) return;
+  homeCardGlobalEventsBound = true;
+  document.addEventListener('pointerdown', function(event){
+    var menu = document.getElementById('home-card-menu');
+    if (menu && !menu.contains(event.target)) closeHomeCardMenu();
+  });
+  document.addEventListener('keydown', function(event){
+    if (event.key === 'Escape') {
+      closeHomeCardMenu();
+      closeHomeCardPicker();
+    }
+  });
+}
+function openHomeCardMenu(event, slot, clientX, clientY) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  var menu = document.getElementById('home-card-menu');
+  if (!menu || !homeCardSlots[slot]) return;
+  selectedHomeCardSlot = slot;
+  menu.classList.add('show');
+  menu.setAttribute('aria-hidden', 'false');
+  var width = menu.offsetWidth || 150;
+  var height = menu.offsetHeight || 46;
+  var x = clientX == null ? event.clientX : clientX;
+  var y = clientY == null ? event.clientY : clientY;
+  menu.style.left = Math.max(8, Math.min(window.innerWidth - width - 8, x)) + 'px';
+  menu.style.top = Math.max(8, Math.min(window.innerHeight - height - 8, y)) + 'px';
+}
+function closeHomeCardMenu() {
+  var menu = document.getElementById('home-card-menu');
+  if (menu) {
+    menu.classList.remove('show');
+    menu.setAttribute('aria-hidden', 'true');
+  }
+}
+function removeSelectedHomeCard() {
+  var slot = selectedHomeCardSlot;
+  closeHomeCardMenu();
+  if (slot < 0 || slot >= homeCardSlots.length || !homeCardSlots[slot]) return;
+  homeCardSlots[slot] = null;
+  selectedHomeCardSlot = -1;
+  saveHomeCardSlots();
+  renderHomeDiscover();
+  showToast('已从首页移除，点击 + 可重新添加');
+}
+function homeCardPickerItemHtml(key, title, meta, cover) {
+  var coverStyle = cover ? ' style="background-image:url(&quot;' + escHtml(cssImageUrl(coverUrlWithSize(cover, 160))) + '&quot;)"' : '';
+  return '<button class="home-card-picker-item" type="button" data-home-card-key="' + escHtml(key) + '">' +
+    '<span class="home-card-picker-cover"' + coverStyle + '></span>' +
+    '<span class="home-card-picker-copy"><span class="home-card-picker-name">' + escHtml(title) + '</span><span class="home-card-picker-meta">' + escHtml(meta) + '</span></span>' +
+  '</button>';
+}
+function renderHomeCardPicker() {
+  var body = document.getElementById('home-card-picker-body');
+  if (!body) return;
+  var occupied = {};
+  homeCardSlots.forEach(function(key){ if (key) occupied[key] = true; });
+  var systemHtml = HOME_BUILTIN_CARD_KEYS.filter(function(key){ return !occupied[key]; }).map(function(key){
+    var meta = homeBuiltinCardMeta(key);
+    return homeCardPickerItemHtml(key, meta.title, meta.sub, '');
+  }).join('');
+  var playlistHtml = userPlaylists.map(function(pl){
+    var key = homePlaylistSlotKey(pl);
+    if (!key || occupied[key]) return '';
+    var provider = pl.provider === 'qq' ? 'qq' : (pl.provider === 'kugou' ? 'kugou' : 'netease');
+    var count = Number(pl.trackCount) || 0;
+    return homeCardPickerItemHtml(key, pl.name || '我的歌单', homeDailyProviderLabel(provider) + (count ? ' · ' + count + ' 首' : ''), pl.cover || '');
+  }).join('');
+  body.innerHTML =
+    '<section class="home-card-picker-section"><div class="home-card-picker-label">系统功能</div>' +
+      (systemHtml ? '<div class="home-card-picker-list">' + systemHtml + '</div>' : '<div class="home-card-picker-empty">系统功能都已在首页</div>') +
+    '</section>' +
+    '<section class="home-card-picker-section"><div class="home-card-picker-label">我的歌单</div>' +
+      (playlistHtml ? '<div class="home-card-picker-list">' + playlistHtml + '</div>' : '<div class="home-card-picker-empty">' + (hasAnyPlatformLogin() ? '没有更多可添加的歌单' : '登录网易云、QQ 音乐或酷狗音乐后可添加歌单') + '</div>') +
+    '</section>';
+  Array.prototype.forEach.call(body.querySelectorAll('[data-home-card-key]'), function(button){
+    button.addEventListener('click', function(){ assignHomeCard(button.getAttribute('data-home-card-key')); });
+  });
+}
+function openHomeCardPicker(slot) {
+  if (slot < 0 || slot >= 6) return;
+  homeCardPickerSlot = slot;
+  renderHomeCardPicker();
+  var mask = document.getElementById('home-card-picker-mask');
+  if (!mask) return;
+  mask.classList.add('show');
+  mask.setAttribute('aria-hidden', 'false');
+  setTimeout(function(){
+    var first = mask.querySelector('.home-card-picker-item');
+    if (first) first.focus();
+  }, 30);
+}
+function closeHomeCardPicker() {
+  var mask = document.getElementById('home-card-picker-mask');
+  if (mask) {
+    mask.classList.remove('show');
+    mask.setAttribute('aria-hidden', 'true');
+  }
+  homeCardPickerSlot = -1;
+}
+function assignHomeCard(key) {
+  if (homeCardPickerSlot < 0 || !key) return;
+  homeCardSlots[homeCardPickerSlot] = key;
+  saveHomeCardSlots();
+  closeHomeCardPicker();
+  renderHomeDiscover();
+  showToast('已添加到首页');
+}
 function compactHomeCount(n) {
   n = Number(n) || 0;
   if (n >= 100000000) return (n / 100000000).toFixed(1).replace(/\.0$/, '') + '亿';
@@ -16219,6 +16569,7 @@ function renderHomeTiles() {
   renderHomeMosaic(tiles);
 }
 function renderHomeDiscover() {
+  renderHomeCardSlots();
   var sub = document.getElementById('home-subtitle');
   var loggedOutHome = !homeDiscoverState.loggedIn && !hasAnyPlatformLogin();
   var weather = homeWeatherRadioState.weather;
@@ -16248,7 +16599,8 @@ function renderHomeDiscover() {
     }
     weatherMeta.innerHTML = meta.join('');
   }
-  var daily = homeDiscoverState.songs[0] || null;
+  var dailyQueue = homeDailySongs();
+  var daily = dailyQueue[0] || null;
   var cardSongB = homeDiscoverState.songs[1] || null;
   var cardSongC = homeDiscoverState.songs[2] || null;
   var playlistItem = homeDiscoverState.playlists[0] || null;
@@ -16276,7 +16628,7 @@ function renderHomeDiscover() {
   if (profileSub) profileSub.textContent = summary.topArtist ? ('常听歌手 · ' + summary.topArtist.plays + ' 次') : (summary.totalPlays ? summary.totalPlays + ' 次有效播放' : '播放几首后生成偏好');
   if (loggedOutHome) {
     if (dailyTitle) dailyTitle.textContent = '每日推荐';
-    if (dailySub) dailySub.textContent = '登录后同步你的今日歌曲';
+    if (dailySub) dailySub.textContent = '支持网易云、QQ 音乐与酷狗音乐';
     if (privateTitle) privateTitle.textContent = '推荐歌曲';
     if (privateSub) privateSub.textContent = '登录后同步更多歌曲';
     if (libTitle) libTitle.textContent = '更多歌曲';
@@ -16288,8 +16640,10 @@ function renderHomeDiscover() {
     setHomeArt('home-profile-art', summary.topSong && summary.topSong.cover || summary.recent && summary.recent.cover, 280);
     setHomeArt('home-library-art', '', 280);
   } else {
-    if (dailyTitle) dailyTitle.textContent = daily ? daily.name : '每日推荐';
-    if (dailySub) dailySub.textContent = daily ? ((daily.artist || songSourceLabel(daily) || '今日歌曲') + ' · 点击播放今日队列') : '同步你的今日歌曲';
+    if (dailyTitle) dailyTitle.textContent = '每日推荐';
+    if (dailySub) dailySub.textContent = dailyQueue.length
+      ? (homeDailyProviderLabel(homeDailyProvider) + ' · ' + dailyQueue.length + ' 首 · 每天更新')
+      : (homeDailyProviderLabel(homeDailyProvider) + '暂时没有可推荐歌曲');
     if (privateTitle) privateTitle.textContent = cardSongB ? cardSongB.name : '私人雷达';
     if (privateSub) privateSub.textContent = cardSongB ? (cardSongB.artist || songSourceLabel(cardSongB) || '推荐歌曲') : (homeDiscoverState.songs.length + ' 首 · 根据今日推荐与常听偏好');
     if (libTitle) libTitle.textContent = cardSongC ? cardSongC.name : (summary.topArtist ? summary.topArtist.name : '更多歌曲');
@@ -16318,6 +16672,13 @@ async function loadHomeDiscover(force) {
     homeDiscoverState.loggedIn = !!(data && data.loggedIn);
     homeDiscoverState.mode = data && data.mode || (homeDiscoverState.loggedIn ? 'member' : 'starter');
     homeDiscoverState.songs = homeDiscoverState.loggedIn ? (data && data.dailySongs || []).map(cloneSong) : [];
+    var dailyGroups = data && data.dailySongsByProvider || {};
+    homeDiscoverState.dailySongsByProvider = {
+      netease: homeDiscoverState.loggedIn ? (dailyGroups.netease || []).map(cloneSong) : [],
+      qq: homeDiscoverState.loggedIn ? (dailyGroups.qq || []).map(cloneSong) : [],
+      kugou: homeDiscoverState.loggedIn ? (dailyGroups.kugou || []).map(cloneSong) : []
+    };
+    homeDiscoverState.providers = Object.assign({ netease:false, qq:false, kugou:false }, data && data.providers || {});
     homeDiscoverState.playlists = homeDiscoverState.loggedIn ? (data && data.playlists || []) : [];
     homeDiscoverState.podcasts = homeDiscoverState.loggedIn ? (data && data.podcasts || []) : [];
     homeDiscoverState.updatedAt = Number(data && data.updatedAt) || Date.now();
@@ -16329,6 +16690,7 @@ async function loadHomeDiscover(force) {
     if (token === homeDiscoverToken) {
       homeDiscoverState.loading = false;
       renderHomeDiscover();
+      safeShelfRebuild('home-discover', true);
     }
   }
 }
@@ -16675,6 +17037,8 @@ function updateEmptyHomeVisibility(opts) {
       homeDiscoverState.loggedIn = false;
       homeDiscoverState.mode = 'starter';
       homeDiscoverState.songs = [];
+      homeDiscoverState.dailySongsByProvider = { netease: [], qq: [], kugou: [] };
+      homeDiscoverState.providers = { netease: false, qq: false, kugou: false };
       homeDiscoverState.playlists = [];
       homeDiscoverState.podcasts = [];
       renderHomeDiscover();
@@ -16737,11 +17101,12 @@ async function playHomeDaily() {
   if (!homeDiscoverState.loaded || (!homeDiscoverState.songs.length && !homeDiscoverState.loading)) {
     await loadHomeDiscover(true);
   }
-  if (!homeDiscoverState.songs.length) {
+  var dailyQueue = homeDailySongs();
+  if (!dailyQueue.length) {
     runHomeSearch('每日推荐');
     return;
   }
-  playQueue = homeDiscoverState.songs.map(cloneSong);
+  playQueue = dailyQueue.map(cloneSong);
   currentIdx = 0;
   safeRenderQueuePanel('home-daily');
   safeShelfRebuild('home-daily', true);
@@ -20576,15 +20941,18 @@ async function loadPlaylistIntoQueueById(id, autoplay, title) {
   updateEmptyHomeVisibility();
   showLoading();
   var idText = String(id || '');
+  var dailyPlaylistProvider = idText.indexOf('daily:') === 0 ? idText.slice(6) || 'all' : '';
   var qqPlaylistId = idText.indexOf('qq:') === 0 ? idText.slice(3) : '';
   var kugouPlaylistId = idText.indexOf('kugou:') === 0 ? idText.slice(6) : '';
   var r = null;
   try {
-    r = qqPlaylistId
-      ? await apiJson('/api/qq/playlist/tracks?id=' + encodeURIComponent(qqPlaylistId))
-      : (kugouPlaylistId
-        ? await apiJson('/api/kugou/playlist/tracks?id=' + encodeURIComponent(kugouPlaylistId))
-        : await apiJson('/api/playlist/tracks?id=' + encodeURIComponent(id)));
+    r = dailyPlaylistProvider
+      ? { tracks: homeDailySongs(dailyPlaylistProvider), playlist: { name:'每日推荐', provider:dailyPlaylistProvider } }
+      : (qqPlaylistId
+        ? await apiJson('/api/qq/playlist/tracks?id=' + encodeURIComponent(qqPlaylistId))
+        : (kugouPlaylistId
+          ? await apiJson('/api/kugou/playlist/tracks?id=' + encodeURIComponent(kugouPlaylistId))
+          : await apiJson('/api/playlist/tracks?id=' + encodeURIComponent(id))));
   } catch (e) {
     console.warn('[PlaylistLoadApi]', id, e);
     showToast('歌单加载失败');

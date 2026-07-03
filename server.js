@@ -1760,35 +1760,127 @@ async function handleSearch(keywords, limit) {
   return mapped;
 }
 
+function dailyDateKey() {
+  const now = new Date();
+  return [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, '0'),
+    String(now.getDate()).padStart(2, '0'),
+  ].join('-');
+}
+
+function dailyStableRank(value) {
+  return parseInt(crypto.createHash('sha1').update(String(value || '')).digest('hex').slice(0, 12), 16);
+}
+
+function dailySongIdentity(song) {
+  if (!song) return '';
+  const provider = song.provider || song.source || song.type || 'netease';
+  return [provider, song.mid || song.hash || song.id || '', song.name || '', song.artist || ''].join(':');
+}
+
+function chooseDailySourcePlaylists(playlists, provider) {
+  const dateKey = dailyDateKey();
+  return (playlists || []).filter(pl => pl && pl.id).sort((a, b) => {
+    const favoriteA = /我喜欢|喜欢的|收藏|favorite|fav/i.test(String(a.name || '')) || a.subscribed === false ? 1 : 0;
+    const favoriteB = /我喜欢|喜欢的|收藏|favorite|fav/i.test(String(b.name || '')) || b.subscribed === false ? 1 : 0;
+    if (favoriteA !== favoriteB) return favoriteB - favoriteA;
+    return dailyStableRank(dateKey + ':' + provider + ':' + a.id) - dailyStableRank(dateKey + ':' + provider + ':' + b.id);
+  }).slice(0, 2);
+}
+
+async function buildLibraryDailySongs(provider, playlists, limit) {
+  const sources = chooseDailySourcePlaylists(playlists, provider);
+  if (!sources.length) return [];
+  const loaders = sources.map(pl => provider === 'qq'
+    ? handleQQPlaylistTracks(pl.id)
+    : handleKugouPlaylistTracks(pl.id));
+  const results = await Promise.allSettled(loaders);
+  const seen = new Set();
+  const pool = [];
+  results.forEach(result => {
+    if (result.status !== 'fulfilled') return;
+    (result.value && result.value.tracks || []).forEach(song => {
+      const key = dailySongIdentity(song);
+      if (!key || seen.has(key)) return;
+      seen.add(key);
+      pool.push({ ...song, dailyProvider: provider });
+    });
+  });
+  const dateKey = dailyDateKey();
+  pool.sort((a, b) => dailyStableRank(dateKey + ':' + dailySongIdentity(a)) - dailyStableRank(dateKey + ':' + dailySongIdentity(b)));
+  return pool.slice(0, limit || 12);
+}
+
+function interleaveDailySongs(groups, limit) {
+  const providerOrder = ['netease', 'qq', 'kugou'];
+  const output = [];
+  const seen = new Set();
+  let index = 0;
+  while (output.length < limit) {
+    let added = false;
+    providerOrder.forEach(provider => {
+      const song = groups[provider] && groups[provider][index];
+      const key = dailySongIdentity(song);
+      if (!song || !key || seen.has(key) || output.length >= limit) return;
+      seen.add(key);
+      output.push(song);
+      added = true;
+    });
+    if (!added) break;
+    index++;
+  }
+  return output;
+}
+
 async function handleDiscoverHome() {
-  const info = await getLoginInfo();
-  const loggedIn = !!(info && info.loggedIn);
+  const accountResults = await Promise.allSettled([
+    getLoginInfo(),
+    handleQQUserPlaylists(),
+    handleKugouUserPlaylists(),
+  ]);
+  const info = accountResults[0].status === 'fulfilled' ? accountResults[0].value : { loggedIn: false };
+  const qqAccount = accountResults[1].status === 'fulfilled' ? accountResults[1].value : { loggedIn: false, playlists: [] };
+  const kugouAccount = accountResults[2].status === 'fulfilled' ? accountResults[2].value : { loggedIn: false, playlists: [] };
+  const providerLoggedIn = {
+    netease: !!(info && info.loggedIn),
+    qq: !!(qqAccount && qqAccount.loggedIn),
+    kugou: !!(kugouAccount && kugouAccount.loggedIn),
+  };
+  const loggedIn = providerLoggedIn.netease || providerLoggedIn.qq || providerLoggedIn.kugou;
   if (!loggedIn) {
     return {
       loggedIn: false,
       user: null,
       dailySongs: [],
+      dailySongsByProvider: { netease: [], qq: [], kugou: [] },
+      providers: providerLoggedIn,
       playlists: [],
       podcasts: [],
       mode: 'starter',
       updatedAt: Date.now(),
     };
   }
-  const tasks = [
+
+  const neteaseTasks = providerLoggedIn.netease ? [
     personalized({ limit: 8, cookie: userCookie, timestamp: Date.now() }),
     dj_hot({ limit: 6, offset: 0, cookie: userCookie, timestamp: Date.now() }),
     recommend_resource({ cookie: userCookie, timestamp: Date.now() }),
     recommend_songs({ cookie: userCookie, timestamp: Date.now() }),
-  ];
-  const result = await Promise.allSettled(tasks);
+  ] : [];
+  const [result, qqDailySongs, kugouDailySongs] = await Promise.all([
+    Promise.allSettled(neteaseTasks),
+    providerLoggedIn.qq ? buildLibraryDailySongs('qq', qqAccount.playlists, 12) : Promise.resolve([]),
+    providerLoggedIn.kugou ? buildLibraryDailySongs('kugou', kugouAccount.playlists, 12) : Promise.resolve([]),
+  ]);
 
-  const personalizedBody = result[0].status === 'fulfilled' && result[0].value && result[0].value.body || {};
+  const personalizedBody = result[0] && result[0].status === 'fulfilled' && result[0].value && result[0].value.body || {};
   const publicPlaylists = (personalizedBody.result || personalizedBody.data || [])
     .map(pl => mapDiscoverPlaylist(pl, '推荐歌单'))
     .filter(pl => pl.id && pl.name)
     .slice(0, 8);
 
-  const podcastBody = result[1].status === 'fulfilled' && result[1].value && result[1].value.body || {};
+  const podcastBody = result[1] && result[1].status === 'fulfilled' && result[1].value && result[1].value.body || {};
   const podcastRaw = podcastBody.djRadios || podcastBody.djradios || podcastBody.radios || podcastBody.data || [];
   const podcasts = (Array.isArray(podcastRaw) ? podcastRaw : [])
     .map(mapPodcastRadio)
@@ -1796,7 +1888,7 @@ async function handleDiscoverHome() {
     .slice(0, 6);
 
   let privatePlaylists = [];
-  if (result[2].status === 'fulfilled' && result[2].value) {
+  if (result[2] && result[2].status === 'fulfilled' && result[2].value) {
     const body = result[2].value.body || {};
     const raw = body.recommend || body.data || [];
     privatePlaylists = (Array.isArray(raw) ? raw : [])
@@ -1805,22 +1897,32 @@ async function handleDiscoverHome() {
       .slice(0, 6);
   }
 
-  let dailySongs = [];
-  if (result[3].status === 'fulfilled' && result[3].value) {
+  let neteaseDailySongs = [];
+  if (result[3] && result[3].status === 'fulfilled' && result[3].value) {
     const body = result[3].value.body || {};
     const raw = body.data && (body.data.dailySongs || body.data.recommend) || body.recommend || [];
-    dailySongs = (Array.isArray(raw) ? raw : [])
+    neteaseDailySongs = (Array.isArray(raw) ? raw : [])
       .map(mapSongRecord)
       .filter(song => song.id && song.name)
+      .map(song => ({ ...song, dailyProvider: 'netease' }))
       .slice(0, 12);
   }
+  const dailySongsByProvider = {
+    netease: neteaseDailySongs,
+    qq: qqDailySongs,
+    kugou: kugouDailySongs,
+  };
+  const dailySongs = interleaveDailySongs(dailySongsByProvider, 24);
 
   return {
     loggedIn,
-    user: loggedIn ? { userId: info.userId, nickname: info.nickname || '', avatar: info.avatar || '' } : null,
+    user: providerLoggedIn.netease ? { userId: info.userId, nickname: info.nickname || '', avatar: info.avatar || '' } : null,
     dailySongs,
+    dailySongsByProvider,
+    providers: providerLoggedIn,
     playlists: privatePlaylists.concat(publicPlaylists).slice(0, 10),
     podcasts,
+    mode: 'member',
     updatedAt: Date.now(),
   };
 }
@@ -4324,7 +4426,15 @@ const server = http.createServer(async (req, res) => {
       sendJSON(res, await handleDiscoverHome());
     } catch (err) {
       console.error('[DiscoverHome]', err);
-      sendJSON(res, { error: err.message, loggedIn: false, dailySongs: [], playlists: [], podcasts: [] }, 500);
+      sendJSON(res, {
+        error: err.message,
+        loggedIn: false,
+        dailySongs: [],
+        dailySongsByProvider: { netease: [], qq: [], kugou: [] },
+        providers: { netease: false, qq: false, kugou: false },
+        playlists: [],
+        podcasts: [],
+      }, 500);
     }
     return;
   }
