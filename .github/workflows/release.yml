@@ -4,6 +4,10 @@ on:
   push:
     tags:
       - "v*"
+    branches:
+      - main
+    paths:
+      - ".github/workflows/release.yml"
 
 permissions:
   contents: write
@@ -29,7 +33,7 @@ jobs:
         shell: pwsh
         run: |
           $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
-          if ("v$version" -ne "${{ github.ref_name }}") {
+          if ("${{ github.ref_type }}" -eq "tag" -and "v$version" -ne "${{ github.ref_name }}") {
             throw "Tag ${{ github.ref_name }} does not match package version $version"
           }
 
@@ -42,7 +46,7 @@ jobs:
           git diff --check
 
       - name: Build Windows installer
-        run: npm run build:win
+        run: npx electron-builder --win nsis --publish never
 
       - name: Create portable ZIP, checksums and release notes
         shell: pwsh
@@ -90,7 +94,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
-          $tag = "${{ github.ref_name }}"
+          $tag = "v$version"
           $assets = @(
             "dist/Mineradio-$version-Setup.exe",
             "dist/Mineradio-$version-Setup.exe.blockmap",
