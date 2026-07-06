@@ -87,6 +87,30 @@ const WEATHER_DEFAULT_LOCATION = {
   timezone: 'Asia/Shanghai',
 };
 
+function currentVersionChangelog() {
+  try {
+    const text = fs.readFileSync(path.join(__dirname, 'CHANGELOG.md'), 'utf8');
+    const wanted = String(APP_VERSION || '').replace(/^v/i, '').trim();
+    const notes = [];
+    let active = false;
+    for (const line of text.split(/\r?\n/)) {
+      const heading = line.match(/^##\s+v?([^\s]+)\s*$/i);
+      if (heading) {
+        if (active) break;
+        active = String(heading[1] || '').replace(/^v/i, '').trim() === wanted;
+        continue;
+      }
+      if (!active) continue;
+      const item = line.match(/^\s*-\s+(.+)$/);
+      if (item && item[1].trim()) notes.push(item[1].trim());
+      if (notes.length >= 12) break;
+    }
+    return notes;
+  } catch (e) {
+    return [];
+  }
+}
+
 const updateDownloadJobs = new Map();
 
 function applySystemCertificateAuthorities() {
@@ -1602,7 +1626,7 @@ function classifyQQPlaybackRestriction(info, session) {
     return playbackRestriction('qq', 'login_required', 'QQ 音乐当前只拿到了网页登录状态，还缺少播放授权，请重新打开官方 QQ 音乐登录窗口完成授权', 'login', { code, rawMessage: rawMsg, missingPlaybackKey: true });
   }
   if (code === 104003) {
-    return playbackRestriction('qq', 'copyright_unavailable', 'QQ 音乐没有给当前版本返回播放地址，通常是版权、会员或官方版本限制，可以换一个搜索结果或切到网易云源', 'switch_source', { code, rawMessage: rawMsg });
+    return playbackRestriction('qq', 'copyright_unavailable', 'QQ 音乐官方客户端可以播放，但当前接口没有向 Mineradio 返回音频地址（104003）', 'switch_source', { code, rawMessage: rawMsg, officialClientRequired: true });
   }
   if (/vip|会员|付费|购买|数字专辑|专辑|pay/.test(lower + rawMsg)) {
     return playbackRestriction('qq', 'paid_required', 'QQ 音乐歌曲需要会员、购买或数字专辑权限', 'upgrade', { code, rawMessage: rawMsg });
@@ -3176,16 +3200,16 @@ function mapKugouTrack(raw) {
     raw['320hash'] || raw['128hash'] || raw.sqhash || raw.SQFileHash || raw.HQFileHash ||
     trans.ogg_320_hash || trans.ogg_128_hash || '';
   const qualityHashes = {
-    standard: raw['128hash'] || raw.hash || raw.Hash || raw.file_hash || trans.ogg_128_hash || '',
+    standard: raw['128hash'] || raw.hash || raw.Hash || raw.file_hash || raw.FileHash || trans.ogg_128_hash || '',
     exhigh: raw['320hash'] || raw.HQFileHash || trans.ogg_320_hash || '',
     lossless: raw.sqhash || raw.SQFileHash || raw.flac_hash || '',
-    hires: raw.hrhash || raw.high_hash || '',
-    jymaster: raw.masterhash || raw.jymaster_hash || '',
+    hires: raw.hrhash || raw.high_hash || raw.ResFileHash || '',
+    jymaster: raw.masterhash || raw.jymaster_hash || raw.SuperFileHash || '',
   };
-  const albumAudioId = raw.album_audio_id || raw.albumAudioId || raw.audio_id || raw.audioid || raw.Audioid || raw.mixsongid || raw.songid || raw.id || '';
+  const albumAudioId = raw.album_audio_id || raw.albumAudioId || raw.audio_id || raw.audioid || raw.Audioid || raw.mixsongid || raw.MixSongID || raw.songid || raw.id || raw.ID || '';
   const filename = cleanKugouTrackText(raw.filename || raw.FileName || '');
-  let name = cleanKugouTrackText(raw.songname || raw.song_name || raw.name || raw.title || '');
-  let artist = cleanKugouTrackText(raw.singername || raw.singer_name || raw.author_name || raw.singer || raw.artist || '');
+  let name = cleanKugouTrackText(raw.songname || raw.SongName || raw.song_name || raw.name || raw.title || '');
+  let artist = cleanKugouTrackText(raw.singername || raw.SingerName || raw.singer_name || raw.author_name || raw.singer || raw.artist || '');
   if (!artist && Array.isArray(raw.singerinfo) && raw.singerinfo[0]) {
     artist = raw.singerinfo.map(item => item && cleanKugouTrackText(item.name)).filter(Boolean).join(' / ');
   }
@@ -3209,10 +3233,10 @@ function mapKugouTrack(raw) {
     }
   }
   const albumInfo = raw.albuminfo || raw.albumInfo || {};
-  const album = raw.album_name || raw.albumname || raw.album || albumInfo.name || '';
+  const album = raw.album_name || raw.albumname || raw.AlbumName || raw.album || albumInfo.name || '';
   const albumId = raw.album_id || raw.albumid || raw.AlbumID || raw.albumId || '';
-  const cover = raw.pic || raw.img || raw.image || raw.cover || raw.sizable_cover || trans.union_cover || '';
-  const durationMs = Number(raw.timelength || raw.time_length || raw.timelen || raw.duration || raw.interval) || 0;
+  const cover = raw.pic || raw.img || raw.image || raw.Image || raw.AlbumImage || raw.cover || raw.sizable_cover || trans.union_cover || '';
+  const durationMs = Number(raw.timelength || raw.time_length || raw.timelen || raw.duration || raw.Duration || raw.interval) || 0;
   const fsort = Number(raw.fsort || raw.sort || raw.position || raw.pos || 0) || 0;
   return {
     provider: 'kugou',
@@ -3235,6 +3259,37 @@ function mapKugouTrack(raw) {
     sort: fsort,
     playable: !!hash,
   };
+}
+
+async function handleKugouSearch(keywords, limit) {
+  const kw = String(keywords || '').trim();
+  if (!kw) return [];
+  const pageSize = Math.max(4, Math.min(30, Number(limit) || 12));
+  const u = new URL('https://songsearch.kugou.com/song_search_v2');
+  u.searchParams.set('keyword', kw);
+  u.searchParams.set('page', '1');
+  u.searchParams.set('pagesize', String(pageSize));
+  u.searchParams.set('userid', '-1');
+  u.searchParams.set('clientver', '');
+  u.searchParams.set('platform', 'WebFilter');
+  u.searchParams.set('filter', '2');
+  u.searchParams.set('iscorrection', '1');
+  u.searchParams.set('privilege_filter', '0');
+  const text = await requestText(u.toString(), {
+    headers: {
+      'User-Agent': UA,
+      Referer: 'https://www.kugou.com/',
+    },
+  });
+  const body = parseJSONText(text);
+  const rawSongs = body && body.data && Array.isArray(body.data.lists) ? body.data.lists : [];
+  const seen = new Set();
+  return rawSongs.map(mapKugouTrack).filter(song => {
+    const key = song && (song.hash || song.id || (song.name + '|' + song.artist));
+    if (!key || !song.name || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 function kugouHashesForQuality(hash, qualityPreference, qualityHashes) {
@@ -4299,6 +4354,7 @@ const server = http.createServer(async (req, res) => {
       name: APP_PACKAGE.name || 'mineradio',
       productName: APP_PACKAGE.productName || 'Mineradio',
       version: APP_VERSION,
+      changelog: currentVersionChangelog(),
       update: {
         provider: UPDATE_CONFIG.provider,
         configured: UPDATE_CONFIG.configured,
@@ -4506,6 +4562,19 @@ const server = http.createServer(async (req, res) => {
     } catch (err) {
       console.error('[QQSearch]', err);
       sendJSON(res, { provider: 'qq', error: err.message, songs: [] }, 500);
+    }
+    return;
+  }
+
+  if (pn === '/api/kugou/search') {
+    try {
+      const kw = url.searchParams.get('keywords') || '';
+      const limit = Math.max(4, Math.min(30, parseInt(url.searchParams.get('limit') || '12', 10) || 12));
+      const songs = await handleKugouSearch(kw, limit);
+      sendJSON(res, { provider: 'kugou', songs });
+    } catch (err) {
+      console.error('[KugouSearch]', err);
+      sendJSON(res, { provider: 'kugou', error: err.message, songs: [] }, 500);
     }
     return;
   }

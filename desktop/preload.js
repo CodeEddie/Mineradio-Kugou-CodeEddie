@@ -8,6 +8,17 @@ contextBridge.exposeInMainWorld('desktopWindow', {
   exitFullscreenWindowed: () => ipcRenderer.invoke('desktop-window-exit-fullscreen-windowed'),
   getState: () => ipcRenderer.invoke('desktop-window-get-state'),
   close: () => ipcRenderer.invoke('desktop-window-close'),
+  onBeforeShutdown: (callback) => {
+    if (typeof callback !== 'function') return () => {};
+    const listener = () => {
+      Promise.resolve()
+        .then(() => callback())
+        .catch(() => {})
+        .finally(() => ipcRenderer.send('mineradio-shutdown-ready'));
+    };
+    ipcRenderer.on('mineradio-before-shutdown', listener);
+    return () => ipcRenderer.removeListener('mineradio-before-shutdown', listener);
+  },
   openNeteaseMusicLogin: () => ipcRenderer.invoke('netease-music-open-login'),
   clearNeteaseMusicLogin: () => ipcRenderer.invoke('netease-music-clear-login'),
   openQQMusicLogin: () => ipcRenderer.invoke('qq-music-open-login'),

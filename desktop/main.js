@@ -24,6 +24,8 @@ let wallpaperState = {};
 let htmlFullscreenActive = false;
 let windowFullscreenActive = false;
 let mainWindowStateTimer = null;
+let appShutdownPromise = null;
+let allowAppQuit = false;
 const registeredGlobalHotkeys = new Map();
 
 const WINDOWED_ASPECT = 16 / 9;
@@ -1488,6 +1490,101 @@ function closeOverlayWindows() {
   closeWallpaperWindow();
 }
 
+function waitForChildExit(child, timeoutMs = 260) {
+  if (!child || child.exitCode != null) return Promise.resolve();
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      child.removeListener('exit', finish);
+      child.removeListener('error', finish);
+      resolve();
+    };
+    child.once('exit', finish);
+    child.once('error', finish);
+    setTimeout(finish, timeoutMs);
+  });
+}
+
+function notifyRendererBeforeShutdown(timeoutMs = 420) {
+  const win = mainWindow;
+  if (!win || win.isDestroyed() || win.webContents.isDestroyed()) return Promise.resolve();
+  const senderId = win.webContents.id;
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      ipcMain.removeListener('mineradio-shutdown-ready', onReady);
+      resolve();
+    };
+    const onReady = (event) => {
+      if (!event.sender || event.sender.id !== senderId) return;
+      finish();
+    };
+    ipcMain.on('mineradio-shutdown-ready', onReady);
+    setTimeout(finish, timeoutMs);
+    try {
+      win.webContents.send('mineradio-before-shutdown');
+    } catch (e) {
+      finish();
+    }
+  });
+}
+
+function closeLocalServerForShutdown(timeoutMs = 520) {
+  const server = localServer;
+  localServer = null;
+  if (!server || typeof server.close !== 'function') return Promise.resolve();
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      resolve();
+    };
+    try {
+      server.close(finish);
+      if (typeof server.closeIdleConnections === 'function') server.closeIdleConnections();
+    } catch (e) {
+      finish();
+      return;
+    }
+    setTimeout(() => {
+      try {
+        if (typeof server.closeAllConnections === 'function') server.closeAllConnections();
+      } catch (e) {}
+      finish();
+    }, timeoutMs);
+  });
+}
+
+function requestAppShutdown(reason = 'unknown') {
+  if (appShutdownPromise) return appShutdownPromise;
+  const forceExitTimer = setTimeout(() => app.exit(0), 1800);
+  appShutdownPromise = (async () => {
+    try {
+      if (mainWindow && !mainWindow.isDestroyed()) mainWindow.hide();
+    } catch (e) {}
+    await notifyRendererBeforeShutdown();
+    unregisterMineradioGlobalHotkeys();
+    const mousePoller = desktopLyricsMousePoller;
+    closeOverlayWindows();
+    await Promise.all([
+      waitForChildExit(mousePoller),
+      closeLocalServerForShutdown(),
+    ]);
+    allowAppQuit = true;
+    app.quit();
+  })().catch((error) => {
+    console.warn('Mineradio shutdown fallback:', reason, error && (error.message || error));
+    allowAppQuit = true;
+    app.exit(0);
+  });
+  return appShutdownPromise;
+}
+
 ipcMain.handle('desktop-window-minimize', (event) => {
   getSenderWindow(event)?.minimize();
 });
@@ -1509,7 +1606,8 @@ ipcMain.handle('desktop-window-get-state', (event) => {
 });
 
 ipcMain.handle('desktop-window-close', (event) => {
-  getSenderWindow(event)?.close();
+  requestAppShutdown('window-control');
+  return { ok: true };
 });
 
 ipcMain.handle('mineradio-hotkeys-configure-global', (_event, bindings) => {
@@ -1829,6 +1927,11 @@ async function createWindow() {
   mainWindow.on('blur', () => sendWindowState(mainWindow));
   mainWindow.on('move', () => scheduleWindowStateSend(mainWindow));
   mainWindow.on('resize', () => scheduleWindowStateSend(mainWindow));
+  mainWindow.on('close', (event) => {
+    if (allowAppQuit) return;
+    event.preventDefault();
+    if (!appShutdownPromise) requestAppShutdown('window-close');
+  });
   mainWindow.on('closed', () => {
     if (mainWindowStateTimer) {
       clearTimeout(mainWindowStateTimer);
@@ -1886,12 +1989,12 @@ if (!gotSingleInstanceLock) {
   });
 
   app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') app.quit();
+    if (process.platform !== 'darwin' && !appShutdownPromise) requestAppShutdown('window-all-closed');
   });
 
-  app.on('before-quit', () => {
-    unregisterMineradioGlobalHotkeys();
-    closeOverlayWindows();
-    if (localServer && localServer.close) localServer.close();
+  app.on('before-quit', (event) => {
+    if (allowAppQuit) return;
+    event.preventDefault();
+    requestAppShutdown('before-quit');
   });
 }
